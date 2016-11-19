@@ -1,0 +1,4 @@
+__pycache__/
+src/*.py
+src/__pycache__/
+config/__pycache__/

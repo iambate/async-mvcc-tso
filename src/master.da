@@ -1,0 +1,32 @@
+import os
+import sys
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(THIS_DIR + "/..")
+from config import master_config
+coord = import_da("coord")
+
+class Client(process):
+    def setup(coords_list):
+        pass
+
+    def run():
+        for coord in self.coords_list:
+            send(('RequestFromClient', "Sagar"), to = coord)
+        await(len(listof(p, received(("ResponseFromCoord", _), from_ = p))) == len(self.coords_list))
+        for coord in self.coords_list:
+            send(('RequestFromClient', "Done"), to = coord)
+
+    def receive(msg=('ResponseFromCoord', response)):
+        print(response)
+
+
+def main():
+    # Access configuration
+    print(master_config.cnfg)
+    clients = new(Client, num = 1)
+    coords = new(coord.Coord, num = 10)
+    
+    setup(clients, (list(coords), ))
+
+    start(coords)
+    start(clients)

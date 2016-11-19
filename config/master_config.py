@@ -1,13 +1,19 @@
-from data import database1
-from data import database2
+import os
+import sys
 
-from data import requests1
-from data import requests2
-from data import requests3
-from data import requests4
-from data import requests6
-from data import database3
-from data import requests5
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(THIS_DIR + "/..")
+
+from config import database1
+from config import database2
+
+from config import requests1
+from config import requests2
+from config import requests3
+from config import requests4
+from config import requests6
+from config import database3
+from config import requests5
 
 class conf:
     def __init__(self):
