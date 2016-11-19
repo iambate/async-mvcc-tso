@@ -1,0 +1,11 @@
+import uuid
+
+class obj:
+    def __init__(self):
+        self.id = uuid.uuid4().int
+
+def hash(id, len_coords_list):
+    return id % len_coords_list
+
+def coord(obj, coords_list):
+    return coords_list[hash(obj.id, len(coords_list))]

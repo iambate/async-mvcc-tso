@@ -3,14 +3,18 @@ import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 from config import master_config
+common = import_da('common')
 
 class Coord(process):
-    def setup():
+    def setup(coords_list):
         pass
 
     def run():
-        await(len(listof(p, received(('RequestFromClient', "Done"), from_=p))) == 1)
+        await(received(('RequestFromClient', "Done")))
 
     def receive(msg=('RequestFromClient', R), from_=p):
-        print("Request from Client: " + R)
+        if type(R) == common.obj:
+            print("Request from Client: " + str(R.id))
+        else:
+            print(R)
         send(('ResponseFromCoord', "shah"), to=p)
