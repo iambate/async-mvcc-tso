@@ -1,7 +1,10 @@
 import os
 import sys
+import uuid
+
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
+
 from config import master_config
 coord = import_da("coord")
 common = import_da("common")
@@ -12,7 +15,7 @@ class Client(process):
 
     def run():
         for coord in self.coords_list:
-            o = common.obj()
+            o = common.Object(uuid.uuid4().int, "employee")
             print("sending to Coord:" + str(common.hash(o.id, len(coords_list))))
             send(('RequestFromClient', o), to = common.coord(o, coords_list))
         await(len(listof(p, received(("ResponseFromCoord", _), from_ = p))) == len(self.coords_list))

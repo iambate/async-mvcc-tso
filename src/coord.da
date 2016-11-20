@@ -13,8 +13,5 @@ class Coord(process):
         await(received(('RequestFromClient', "Done")))
 
     def receive(msg=('RequestFromClient', R), from_=p):
-        if type(R) == common.obj:
-            print("Request from Client: " + str(R.id))
-        else:
-            print(R)
+        print(R)
         send(('ResponseFromCoord', "shah"), to=p)

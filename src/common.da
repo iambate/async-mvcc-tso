@@ -1,11 +1,111 @@
+from enum import Enum
+import xml.etree.ElementTree as ET
 import uuid
 
-class obj:
-    def __init__(self):
+class ObjectTypeEnum(Enum):
+    SUBJECT = 1
+    RESOURCE = 2
+
+    def __str__(self):
+        return self.name
+
+class Object:
+    def __init__(self, id, type):
+        self.id = id
+        self.type = type
+
+    def __str__(self):
+        return "Obj ID:" + str(self.id) + "\n Obj type:" + self.type
+
+class Request:
+    '''
+    the following dictionaries will contain all attributes of the resource
+    and subject that the client/coordinator has any information about
+    '''
+    def  __init__(self,subject,resource,action_type):
         self.id = uuid.uuid4().int
+        self.subject = subject
+        self.resource = resource
+        self.action = action_type
+        self.resource_defread = []
+        self.subject_defread = []
+        self.resource_mightRead =[]
+        self.subject_mightRead = []
+        self.mightWriteObj = []
+        self.objects = []
+
+    def __str__(self):
+        return  "Req ID: " + str(self.id) + "\n Subject: " + self.subject + \
+                "\n Resource: " + self.resource
+
+def isSame(x,obj):
+    if x.id == obj.id and x.type == obj.type:
+        return True
+    return False
+
+def populateRequest(req):
+    tree = ET.parse('policy-example.xml')
+    root = tree.getroot()
+    rules_match = 0
+    subj_attributes = {}
+    res_attributes = {}
+    for rule in root.iter('rule'):
+        rc = rule.find('resourceCondition').attrib["type"]
+        act = rule.find('action').attrib["name"]
+        sc = rule.find('subjectCondition').attrib["type"]
+
+        if sc == req.subject.type and rc == req.resource.type and act == req.action:
+            rules_match += 1
+            sc_attribs = rule.find('subjectCondition').attrib.keys()
+            for key in sc_attribs:
+                if key in subj_attributes:
+                    subj_attributes[key] = subj_attributes[key] + 1
+                else:
+                    subj_attributes[key] = 1
+            rc_attribs = rule.find('resourceCondition').attrib.keys()
+            for key in rc_attribs:
+                if key in res_attributes:
+                    res_attributes[key] = res_attributes[key] + 1
+                else:
+                    res_attributes[key] = 1
+
+    for key in subj_attributes:
+        if subj_attributes[key] == rules_match:
+            req.subject_defread.append(key)
+        else:
+            req.subject_mightRead.append(key)
+
+    for key in res_attributes:
+        if res_attributes[key] == rules_match:
+            req.resource_defread.append(key)
+        else:
+            req.resource_mightRead.append(key)
+
 
 def hash(id, len_coords_list):
     return id % len_coords_list
 
 def coord(obj, coords_list):
     return coords_list[hash(obj.id, len(coords_list))]
+
+def defReadAttr(x,req):
+    if isSame(x,req.subject) == True:
+        if len(req.subject_defread) != 0:
+            return req.subject_defread
+        else:
+            populateRequest(req)
+            return req.subject_defread
+
+    elif isSame(x,req.resource):
+        if len(req.resource_defread) != 0:
+            return req.resource_defread
+        else:
+            populateRequest(req)
+            return req.resource_defread
+
+def mightReadAttr(x,req):
+    if isSame(x,req.subject) == True:
+        return req.subject_mightRead
+
+    elif isSame(x,req.resource):
+        return req.resource_mightRead
