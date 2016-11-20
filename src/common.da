@@ -15,7 +15,7 @@ class Object:
         self.type = type
 
     def __str__(self):
-        return "Obj ID:" + str(self.id) + "\n Obj type:" + self.type
+        return "Obj ID: " + str(self.id) + "\nObj type: " + self.type
 
 class Request:
     '''
@@ -35,8 +35,8 @@ class Request:
         self.objects = []
 
     def __str__(self):
-        return  "Req ID: " + str(self.id) + "\n Subject: " + self.subject + \
-                "\n Resource: " + self.resource
+        return  "Req ID: " + str(self.id) + "\nSubject: " + self.subject + \
+                "\nResource: " + self.resource
 
 def isSame(x,obj):
     if x.id == obj.id and x.type == obj.type:
