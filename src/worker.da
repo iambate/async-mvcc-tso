@@ -1,9 +1,47 @@
+import xml.etree.ElementTree as ET
 import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 from config import master_config
 common = import_da('common')
+
+
+def staticAnalysis(req):
+    tree = ET.parse(THIS_DIR + '/../policy-example.xml')
+    root = tree.getroot()
+    rules_match = 0
+    subj_attributes = {}
+    res_attributes = {}
+    R = []
+    for rule in root.iter('rule'):
+        rc = rule.find('resourceCondition').attrib["type"]
+        act = rule.find('action').attrib["name"]
+        sc = rule.find('subjectCondition').attrib["type"]
+        subject = req.subject
+        resource = req.resource
+
+        if sc == subject.type and rc == resource.type and act == req.action:
+            R.append(rule)
+    return R
+
+def _add_attrs(attr, d):
+    if d:
+        attr += list(d)
+
+def getAttrNeeded(rule, type):
+    attrs = []
+    if type == common.ObjectTypeEnum.SUBJECT:
+        sc_attribs = rule.find('subjectCondition').attrib.keys()
+        _add_attrs(attrs, sc_attribs)
+        sub_write=rule.find('subjectUpdate')
+        _add_attrs(attrs, sub_write)
+    else:
+        rc_attribs = rule.find('resourceCondition').attrib.keys()
+        _add_attrs(attrs, rc_attribs)
+        res_write=rule.find('resourceUpdate')
+        _add_attrs(attrs, res_write)
+    return attrs
 
 class Worker(process):
     def setup(requestNo):
@@ -13,6 +51,22 @@ class Worker(process):
         await(received(('RequestFromClient', "Done")))
 
     def receive(msg=('RequestFromCoord', R), from_=p):
+        rules = staticAnalysis(R)
+        o = common.obj(R, 1)
+        for rule in rules:
+            if o == R.subject:
+                R.readAttr[1] += getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
+                R.readAttr[2] += getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
+            else:
+                R.readAttr[2] += getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
+                R.readAttr[1] += getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
+
+        # Remove duplicates
+        l = list(set(R.readAttr[1]))
+        R.readAttr[1] = l
+        l = list(set(R.readAttr[2]))
+        R.readAttr[2] = l
+
         if type(R) == common.Request:
             R.decision = 'permit'
             send(('Result', R), to=p)

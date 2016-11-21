@@ -50,6 +50,7 @@ class Request:
         self.resource_mightRead =[]
         self.subject_mightRead = []
         self.mightWriteObj = []
+        self.readAttr = [[], [], []]
         self.objects = []
         self.updatedObj = -1
         self.rdOnlyObj = -1
@@ -60,7 +61,14 @@ class Request:
     def __str__(self):
         return  "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \
                 "Resource:\n" + str(self.resource) + \
-                "action: " + self.action + "\n"
+                "action: " + self.action + \
+                "\nReadAttr Obj1: " + str(self.readAttr[1]) + \
+                "\nReadAttr Obj2: " + str(self.readAttr[2]) + \
+                "\nupdatedObj: " + str(self.updatedObj) + \
+                "\nrdOnlyObj: " + str(self.rdOnlyObj) + \
+                "\nupdates: " + str(self.updates) + \
+                "\ndecision: " + str(self.decision) + \
+                "\n"
 
 def isSame(x,obj):
     if x.id == obj.id and x.type == obj.type:
