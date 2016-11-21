@@ -57,7 +57,7 @@ class Request:
         self.rdOnlyObj = -1
         self.updates = []
         self.decision = None
-
+        self.ts = None
 
     def __str__(self):
         return  "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \
@@ -155,6 +155,11 @@ def mightReadAttr(x,req):
 
     elif isSame(x,req.resource):
         return req.resource_mightRead
+
+def mightWriteAttr(x, req):
+    #PENDING IMPLEMENTATION
+    pass
+
 
 def now():
    time.time()
