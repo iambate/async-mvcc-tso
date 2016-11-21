@@ -21,6 +21,7 @@ class Client(process):
                 res = common.Object(requests[i]["resid"], requests[i]["restype"])
                 req = common.Request(subj, res, requests[i]["action"])
                 common.populateRequest(req)
+                req.client = self
                 if req.resource in common.mightWriteObj(req):
                     obj1 = req.subject
                     obj2 = req.resource

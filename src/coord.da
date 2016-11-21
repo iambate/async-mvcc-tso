@@ -47,5 +47,5 @@ class Coord(process):
         await(received(('RequestFromClient', "Done")))
 
     def receive(msg=('RequestFromClient', R), from_=p):
-        print(R)
-        send(('ResponseFromCoord', "shah"), to=p)
+        if type(R) == common.Request:
+            send(('ResponseFromCoord', R), to=R.client)
