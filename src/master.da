@@ -1,4 +1,3 @@
-from config import master_config as conf
 import os
 import sys
 import uuid
@@ -6,7 +5,7 @@ import uuid
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 
-from config import master_config
+from config import master_config as conf
 coord = import_da("coord")
 common = import_da("common")
 
@@ -31,7 +30,7 @@ class Client(process):
 def main():
     # Access configuration
     requestNo = int(sys.argv[1])
-    print(master_config.cnfg)
+    print(conf.cnfg)
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 10)
     
