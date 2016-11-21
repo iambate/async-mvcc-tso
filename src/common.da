@@ -51,6 +51,11 @@ class Request:
         self.subject_mightRead = []
         self.mightWriteObj = []
         self.objects = []
+        self.updatedObj = -1
+        self.rdOnlyObj = -1
+        self.updates = []
+        self.decision = None
+
 
     def __str__(self):
         return  "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \

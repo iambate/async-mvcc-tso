@@ -6,6 +6,7 @@ THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 
 from config import master_config as conf
+worker = import_da("worker")
 coord = import_da("coord")
 common = import_da("common")
 
@@ -20,7 +21,6 @@ class Client(process):
                 subj = common.Object(requests[i]["subjid"], requests[i]["subjtype"])
                 res = common.Object(requests[i]["resid"], requests[i]["restype"])
                 req = common.Request(subj, res, requests[i]["action"])
-                common.populateRequest(req)
                 req.client = self
                 if req.resource in common.mightWriteObj(req):
                     obj1 = req.subject
@@ -43,15 +43,20 @@ def main():
     print(conf.cnfg)
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
+    workers = new(worker.Worker, num = 6)
     
+    setup(workers, (requestNo,))
+    setup(coords, (list(coords), list(workers), requestNo))
     setup(clients, (list(coords), requestNo))
-    setup(coords, (list(coords), ))
 
+    start(workers)
     start(coords)
     start(clients)
 
     for c in clients: c.join()
 
     # Terminate the process
+    for w in workers:
+        send(('RequestFromClient', "Done"), to = w)
     for c in coords:
         send(('RequestFromClient', "Done"), to = c)

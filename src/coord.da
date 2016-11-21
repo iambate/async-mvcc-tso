@@ -9,7 +9,7 @@ CACHE = {}
 
 def latestVersionBefore(x, attr, ts):
 
-	prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
+    prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
     if prevI == -1:
         '''
         prevI is None, means ts is old & required version is not in CACHE.
@@ -40,12 +40,16 @@ def cachedUpdates(x, req):
 
 
 class Coord(process):
-    def setup(coords_list):
+    def setup(coords_list, workers_list, requestNo):
         pass
 
     def run():
         await(received(('RequestFromClient', "Done")))
 
     def receive(msg=('RequestFromClient', R), from_=p):
+        if type(R) == common.Request:
+            send(('RequestFromCoord', R), to=workers_list[common.hash(R.subject.id, len(workers_list))])
+
+    def receive(msg=('Result', R), from_=p):
         if type(R) == common.Request:
             send(('ResponseFromCoord', R), to=R.client)
