@@ -16,7 +16,7 @@ class Object:
         self.type = type
 
     def __str__(self):
-        return "Obj ID: " + str(self.id) + "\nObj type: " + self.type
+        return "   Obj ID: " + str(self.id) + "\n   Obj type: " + self.type + "\n"
 
 
 class Versions:
@@ -53,8 +53,9 @@ class Request:
         self.objects = []
 
     def __str__(self):
-        return  "Req ID: " + str(self.id) + "\nSubject: " + self.subject + \
-                "\nResource: " + self.resource
+        return  "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \
+                "Resource:\n" + str(self.resource) + \
+                "action: " + self.action + "\n"
 
 def isSame(x,obj):
     if x.id == obj.id and x.type == obj.type:
@@ -107,7 +108,7 @@ def populateRequest(req):
         else:
             req.resource_mightRead.append(key)
 
-def mightwriteobj(req):
+def mightWriteObj(req):
     return req.mightWriteObj
 
 def hash(id, len_coords_list):
@@ -140,3 +141,6 @@ def mightReadAttr(x,req):
 
 def now():
    time.time()
+
+def obj(req, i):
+    return req.objects[i]
