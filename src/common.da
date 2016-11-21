@@ -53,8 +53,10 @@ def populateRequest(req):
         rc = rule.find('resourceCondition').attrib["type"]
         act = rule.find('action').attrib["name"]
         sc = rule.find('subjectCondition').attrib["type"]
+        subject = req.subject
+        resource = req.resource
 
-        if sc == req.subject.type and rc == req.resource.type and act == req.action:
+        if sc == subject.type and rc == resource.type and act == req.action:
             rules_match += 1
             sc_attribs = rule.find('subjectCondition').attrib.keys()
             for key in sc_attribs:
@@ -68,6 +70,12 @@ def populateRequest(req):
                     res_attributes[key] = res_attributes[key] + 1
                 else:
                     res_attributes[key] = 1
+            sub_write=rule.find('subjectUpdate')
+            if sub_write != None and subject not in req.mightWriteObj:
+                req.mightWriteObj.append(subject)
+            res_write=rule.find('resourceUpdate')
+            if res_write != None and resource not in req.mightWriteObj:
+                req.mightWriteObj.append(resource)
 
     for key in subj_attributes:
         if subj_attributes[key] == rules_match:
@@ -81,6 +89,8 @@ def populateRequest(req):
         else:
             req.resource_mightRead.append(key)
 
+def mightwriteobj(req):
+    return req.mightWriteObj
 
 def hash(id, len_coords_list):
     return id % len_coords_list
@@ -109,3 +119,14 @@ def mightReadAttr(x,req):
 
     elif isSame(x,req.resource):
         return req.resource_mightRead
+'''
+def main():
+    subject = Object(567,"employee")
+    resource = Object(678,"bank")
+    req = Request(subject,resource,"read")
+    populateRequest(req)
+    if req.subject in mightwriteobj(req):
+        print("subject")
+    if req.resource in mightwriteobj(req):
+        print("resource")
+'''
