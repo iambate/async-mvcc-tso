@@ -5,6 +5,44 @@ sys.path.append(THIS_DIR + "/..")
 from config import master_config
 common = import_da('common')
 
+CACHE = {}
+
+def latestVersionBefore(x, attr, ts):
+    prevI = None
+    if x in CACHE and attr in CACHE[x]:
+        for i in CACHE[x][attr]:
+            if(i.wts > ts):
+                break
+            prevI = i
+    if prevI == None:
+        '''
+        prevI is None, means ts is old & required version is not in CACHE.
+        We will add a special version that has rts=0 and wts=0
+        and insert that to the start of list of versions for that attribute.
+        This same special version is returned.
+        '''
+        if x not in CACHE:
+            CACHE[x] = {}
+        if attr not in CACHE[x]:
+            CACHE[x][attr] = []
+        CACHE[x][attr].insert(0, common.Versions())
+        prevI = CACHE[x][attr][0]
+    return prevI
+
+
+def cachedUpdates(x, req):
+    cu = {}
+    l = {attr: attr in common.mightReadAttr(x, req) and attr in common.defReadAttr(x, req)}
+    for attrs in l:
+        '''
+        if attrs is an attribute of an object handled by this coordinator
+        get value of latest version of that attribute and return
+        '''
+        attrVersion = latestVersionBefore(x, attrs, req.ts)
+        cu[attrs] = copy.deepcopy(attrVersion)
+    return cu
+
+
 class Coord(process):
     def setup(coords_list):
         pass

@@ -1,5 +1,6 @@
 from enum import Enum
 import xml.etree.ElementTree as ET
+import time
 import uuid
 
 class ObjectTypeEnum(Enum):
@@ -16,6 +17,23 @@ class Object:
 
     def __str__(self):
         return "Obj ID: " + str(self.id) + "\nObj type: " + self.type
+
+
+class Versions:
+    def __init__(self,rts=0,wts=0,value=None):
+        self.rts = rts
+        self.wts = wts
+        self.value = value
+        self.pendingMightRead = []
+        self.pendingMightWrite = []
+
+    def __str__(self):
+        return  "rts: " + str(self.rts) + \
+                "\nwts: " + str(self.wts) + \
+                "\nvalue: " + str(self.value) + \
+                "\npendingMightRead: " + str(self.pendingMightRead) + \
+                "\npendingMightWrite: " + str(self.pendingMightWrite)
+
 
 class Request:
     '''
@@ -119,14 +137,6 @@ def mightReadAttr(x,req):
 
     elif isSame(x,req.resource):
         return req.resource_mightRead
-'''
-def main():
-    subject = Object(567,"employee")
-    resource = Object(678,"bank")
-    req = Request(subject,resource,"read")
-    populateRequest(req)
-    if req.subject in mightwriteobj(req):
-        print("subject")
-    if req.resource in mightwriteobj(req):
-        print("resource")
-'''
+
+def now():
+   time.time()

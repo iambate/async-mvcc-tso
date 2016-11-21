@@ -1,3 +1,4 @@
+from config import master_config as conf
 import os
 import sys
 import uuid
@@ -10,10 +11,13 @@ coord = import_da("coord")
 common = import_da("common")
 
 class Client(process):
-    def setup(coords_list):
+    def setup(coords_list, requestNo):
         pass
 
     def run():
+        requests = conf.cnfg[requestNo].requests
+        for i in requests:
+               print(requests[i])
         for coord in self.coords_list:
             o = common.Object(uuid.uuid4().int, "employee")
             print("sending to Coord:" + str(common.hash(o.id, len(coords_list))))
@@ -26,11 +30,12 @@ class Client(process):
 
 def main():
     # Access configuration
+    requestNo = int(sys.argv[1])
     print(master_config.cnfg)
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 10)
     
-    setup(clients, (list(coords), ))
+    setup(clients, (list(coords), requestNo))
     setup(coords, (list(coords), ))
 
     start(coords)
