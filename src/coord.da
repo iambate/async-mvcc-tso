@@ -8,13 +8,9 @@ common = import_da('common')
 CACHE = {}
 
 def latestVersionBefore(x, attr, ts):
-    prevI = None
-    if x in CACHE and attr in CACHE[x]:
-        for i in CACHE[x][attr]:
-            if(i.wts > ts):
-                break
-            prevI = i
-    if prevI == None:
+
+	prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
+    if prevI == -1:
         '''
         prevI is None, means ts is old & required version is not in CACHE.
         We will add a special version that has rts=0 and wts=0

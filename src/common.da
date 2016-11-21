@@ -108,7 +108,10 @@ def populateRequest(req):
         else:
             req.resource_mightRead.append(key)
 
+
 def mightWriteObj(req):
+    if len(req.mightWriteObj) == 0 :
+        populateRequest(req)
     return req.mightWriteObj
 
 def hash(id, len_coords_list):
