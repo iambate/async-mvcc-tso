@@ -11,12 +11,6 @@ def latestVersionBefore(x, attr, ts):
 
     prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
     if prevI == -1:
-        '''
-        prevI is None, means ts is old & required version is not in CACHE.
-        We will add a special version that has rts=0 and wts=0
-        and insert that to the start of list of versions for that attribute.
-        This same special version is returned.
-        '''
         if x not in CACHE:
             CACHE[x] = {}
         if attr not in CACHE[x]:
@@ -30,10 +24,6 @@ def cachedUpdates(x, req):
     cu = {}
     l = {attr: attr in common.mightReadAttr(x, req) and attr in common.defReadAttr(x, req)}
     for attrs in l:
-        '''
-        if attrs is an attribute of an object handled by this coordinator
-        get value of latest version of that attribute and return
-        '''
         attrVersion = latestVersionBefore(x, attrs, req.ts)
         cu[attrs] = copy.deepcopy(attrVersion)
     return cu
@@ -44,93 +34,55 @@ class Coord(process):
         self.sessionID = common.now()
 
     def run():
-        await(received(('RequestFromClient', "Done")))
+        await(received("Done"))
 
-    def receive(msg=('RequestFromClient', req, n), from_=p):
+    def receive(msg=('Request', req, n), from_=p):
     	x = common.obj(req,n)
     	if n == 1:
     		req.ts = now()
     	tobeRead = list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req)) | set(mightWriteAttr(x, req)))
-    	await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() forall attr in tobeRead)
+    	await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead) #????
 
-
-
-        print(R)
-        send(('ResponseFromCoord', "shah"), to=p)
-'''
-process Coordinator:
-	def __init__(self):
-		self.sessionID = now()
-
-
-
-
-	def receive(msg=('Request',req,n)):
-		Object x = obj(req,n)
-		if n == 1:
-			req.ts = now()
-
-
-		# Wait to avoid starvation
-		toBeRead = defReadAttr(x, req) + mightReadAttr(x, req)
-				   + mightWriteAttr(x, req)
-		
-		(*) If pendingMightWrite list of any attribute is nonempty, then this
-		request must wait in order to prevent starvation of the restarted request.
-		
-		await (forall attr in toBeRead:
-			   latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty())
-
-
-		if (len(mightWriteObj(x, req)) == 0):
-			# Readonly request
+    	if (len(mightWriteObj(x, req)) == 0):
 			for attr in defReadAttr(x, req):
 				latestVersionBefore(x, attr, req.ts).rts = req.ts
 		else:
 			for attr in defReadAttr(x,req):
 				latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
-			
-if req.restarted:
-				
-				If already restarted, then we can say with high probability that
-				its a write request and add it to pendingMightWrite list of all those
-				attributes in its MightWriteAttr list. Refer to (*)
-				
-				for attr in mightWriteAttr(x, req):
-					latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
-
+		if req.restarted == True:
+			for attr in mightWriteAttr(x, req):
+				latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
 		for attr in mightReadAttr(x, req):
 			latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
-
 
 		req.cachedUpdates[n] = cachedUpdates(x, req)
 		if n == 1:
 			send('Request',req,n=2,to=coord(obj(req,2)))
 		else:
-			send('Request',req,to=Worker[hash(req.id)])
-
+			send('Request',req,to=Worker[hash(req.id,len(coords_list))])
 
 	def receive(msg=('ReadAttr', req, i)):
 		x = obj(req, i)
 		for attr in mightReadAttr(x, req):
 			v = latestVersionBefore(x, attr, req.ts)
-			v.pendingMightRead.remove(req.id)
+			if req.id in v.pendingMightRead:
+				v.pendingMightRead.remove(req.id)
 			if attr in req.readAttr[i]:
 				v.rts = req.ts
 		for attr in mightWriteAttr(x, req):
 			v = latestVersionBefore(x, attr, req.ts)
-			v.pendingMightWrite.remove(req.id)
-
+			if req.id in v.pendingMightRead:
+				v.pendingMightRead.remove(req.id)
 
 	def checkForConflicts(x, req):
-		for <attr, val> in req.updates:
+		for (attr, val) in req.updates:
 			v = latestVersionBefore(x,attr,req.ts)
 			if v.rts > req.ts:
 				return true
 		return false
 
-
+'''
 
 
 	def receive(msg=('Result',req)):

@@ -52,12 +52,16 @@ class Request:
         self.mightWriteObj = []
         self.readAttr = [[], [], []]
         self.cachedUpdates = [[], [], []]
+        self.subject_mightWriteAttr = []
+        self.resource_mightWriteAttr = []
         self.objects = []
         self.updatedObj = -1
         self.rdOnlyObj = -1
         self.updates = []
         self.decision = None
         self.ts = None
+        self.restarted = False
+        self.cachedUpdates = {}
 
     def __str__(self):
         return  "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \
@@ -103,12 +107,20 @@ def populateRequest(req):
                     res_attributes[key] = res_attributes[key] + 1
                 else:
                     res_attributes[key] = 1
+            
             sub_write=rule.find('subjectUpdate')
             if sub_write != None and subject not in req.mightWriteObj:
                 req.mightWriteObj.append(subject)
+                for key in sub_write.attrib.keys():
+                    if key not in req.subject_mightWriteAttr:
+                        req.subject_mightWriteAttr.append(key)
+            
             res_write=rule.find('resourceUpdate')
             if res_write != None and resource not in req.mightWriteObj:
                 req.mightWriteObj.append(resource)
+                for key in res_write.attrib.keys():
+                    if key not in req.resource_mightWriteAttr:
+                        req.resource_mightWriteAttr.append(key)
 
     for key in subj_attributes:
         if subj_attributes[key] == rules_match:
@@ -157,8 +169,10 @@ def mightReadAttr(x,req):
         return req.resource_mightRead
 
 def mightWriteAttr(x, req):
-    #PENDING IMPLEMENTATION
-    pass
+    if x == req.subject:
+        return req.subject_mightWriteAttr
+    else:
+        return req.resource_mightWriteAttr
 
 
 def now():
