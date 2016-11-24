@@ -41,7 +41,18 @@ class Coord(process):
     	if n == 1:
     		req.ts = now()
     	tobeRead = list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req)) | set(mightWriteAttr(x, req)))
-    	await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead) #????
+    	'''
+    	await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead)
+    	'''
+    	count_empty = 0
+    	while true:
+    		for attr in tobeRead:
+    			if latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() == True:
+    				count_empty += 1
+
+    		if count_empty == len(tobeRead):
+    			break
+
 
     	if (len(mightWriteObj(x, req)) == 0):
 			for attr in defReadAttr(x, req):
@@ -82,36 +93,43 @@ class Coord(process):
 				return true
 		return false
 
-'''
-
-
 	def receive(msg=('Result',req)):
-		# Do nothing if the write request started in older session
 		if req.ts < self.sessionID:
 			return
-		Object x = obj(req,req.updatedObj)
-		# check whether there are already known conflicts
+		x = obj(req,req.updatedObj)
 		conflict = checkForConflicts(x, req)
 
-
 		if conflict == False:
-			# wait for relevant pending reads to complete
-			for <attr,val> in req.updates:
+			for (attr,val) in req.updates:
 				latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
-			
-			An approach to prevent deadlocks:
-			await condition is true if timeout timer expires or the pendingMightRead list of 
-attributes to be updated, empties out. 
-			
-			start_timer = now()
+
+			start_timer = common.now()
 			timeout = random.random()
 
-
-			await(forall <attr,val> in req.updates :
+			'''
+			await((forall (attr,val) in req.updates :
+				  
 				  (latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == true) or
+				  
 				  (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and
-					req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), timeout = timeout)
-			if  now() - start_timer >= timeout:
+				
+					req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), (common.now() - start_timer >= timeout))
+			'''
+			timed_out = False
+			while True:
+				if common.now() - start_timer >= timeout:
+					timed_out = True
+					break
+				count_empty = 0
+				for (attr,val) in req.updates:
+					if latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == true \
+					or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
+					req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
+						count_empty += 1
+				if count_empty == len(req.updates):
+					break
+			
+			if timed_out == True:
 				send(('Restart', req, 1), to=coord(obj(req,1)))
 				send(('Restart', req, 2), to=coord(obj(req,2)))
 				return
@@ -119,15 +137,13 @@ attributes to be updated, empties out.
 
 			conflict = checkForConflicts(x, req)
 			
-if not conflict:
+			if not conflict:
 				send("UpdateDatabase",req.updatedObj,req.updates,req.ts,to=Database)
-				for <attr,val> in req.updates:
+				for (attr,val) in req.updates:
 					v = Versions(req.ts,req.ts,val)
 					CACHE[x][attr].append(v)
 
-
-				# update read timestamps
-				AllAttrsRead = defReadAttr(x,req) union mightReadAttr(x,req)
+				AllAttrsRead = list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req)))
 				for attr in AllAttrsRead:
 					v = latestVersionBefore(x,attr,req.ts)
 					v.pendingMightRead.remove(req.id)
@@ -146,12 +162,10 @@ if not conflict:
 			send(('Restart', req, 2), to=coord(obj(req,2)))
 
 
-
-
 	def receive(msg=('Restart', req, n)):
 		x = obj(req, n)
 		
-for attr in defReadAttr(x, req) union mighReadAttr(x, req):
+		for attr in list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req))):
 			latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
 
 
@@ -160,5 +174,3 @@ for attr in defReadAttr(x, req) union mighReadAttr(x, req):
 		if n == 2:
 			req.restarted = True
 			send(('Request', req, 1), to=coord(obj(req, 1)))
-'''
-
