@@ -1,0 +1,20 @@
+import os
+import sys
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(THIS_DIR + "/..")
+from config import master_config
+common = import_da('common')
+
+class DB(process):
+    def setup(requestNo):
+        pass
+
+    def run():
+        await(received(('RequestFromClient', "Done")))
+
+    def receive(msg=('RequestFromClient', R), from_=p):
+            pass
+
+    def receive(msg=('Read', unique_db_req, R, attr_from_db), from_=p):
+        if type(R) == common.Request:
+            send(('ReadDbResponse', unique_db_req, R), to=p)

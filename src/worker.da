@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 import sys
+import queue
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 from config import master_config
@@ -44,22 +45,39 @@ def getAttrNeeded(rule, type):
     return attrs
 
 class Worker(process):
-    def setup(requestNo):
-        pass
+    def setup(db, requestNo):
+        self.q = queue.Queue()
 
-    def run():
-        await(received(('RequestFromClient', "Done")))
+    def readFromDB(R, attr_from_db, rule_no):
+        unique_db_req = str(R.id) + str(rule_no) 
+        send(('Read', unique_db_req, R, attr_from_db), to=self.db)
+        await(some(received(('ReadDbResponse', unique_db_req, newR))))
+        return newR
 
-    def receive(msg=('RequestFromCoord', R), from_=p):
-        rules = staticAnalysis(R)
+    def doWork(work):
+        rules = work['rules']
+        R = work['request']
+        p= work['fromProcess']
         o = common.obj(R, 1)
+        rule_no = 0
         for rule in rules:
+            attr_list = {}
             if o == R.subject:
-                R.readAttr[1] += getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
-                R.readAttr[2] += getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
+                attr_list[1] = getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
+                attr_list[2] = getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
             else:
-                R.readAttr[2] += getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
-                R.readAttr[1] += getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
+                attr_list[2] = getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
+                attr_list[1] = getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
+
+            attr_from_db = {1:[], 2: []}
+            for i in [1,2]:
+                for attrs in attr_list[i]:
+                    if attrs in R.cachedUpdates[i] and R.cachedUpdates[i][attrs].value != None:
+                        R.readAttr[i].append(cachedUpdates[n][attrs])
+                    else:
+                        attr_from_db[i] += attrs
+            newR = readFromDB(R, attr_from_db, rule_no)
+            rule_no += 1
 
         # Remove duplicates
         l = list(set(R.readAttr[1]))
@@ -70,3 +88,19 @@ class Worker(process):
         if type(R) == common.Request:
             R.decision = 'permit'
             send(('Result', R), to=p)
+
+    def run():
+        while True:
+            await(received(('RequestFromClient', "Done")) or not self.q.empty())
+            if not self.q.empty():
+                doWork(self.q.get())
+            else:
+                break
+
+    def receive(msg=('RequestFromCoord', R), from_=p):
+        rules = staticAnalysis(R)
+        work = {}
+        work['rules'] = rules
+        work['request'] = R
+        work['fromProcess'] = p
+        self.q.put(work)

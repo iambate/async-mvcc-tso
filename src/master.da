@@ -6,6 +6,7 @@ THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 
 from config import master_config as conf
+db = import_da("db")
 worker = import_da("worker")
 coord = import_da("coord")
 common = import_da("common")
@@ -35,6 +36,7 @@ class Client(process):
 
     def receive(msg=('ResponseFromCoord', response)):
         print(response)
+        pass
 
 
 def main():
@@ -44,11 +46,14 @@ def main():
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
     workers = new(worker.Worker, num = 6)
-    
-    setup(workers, (requestNo,))
+    dbs = new(db.DB, num = 1)
+
+    setup(dbs, (requestNo,))
+    setup(workers, (dbs, requestNo))
     setup(coords, (list(coords), list(workers), requestNo))
     setup(clients, (list(coords), requestNo))
 
+    start(dbs)
     start(workers)
     start(coords)
     start(clients)
@@ -60,3 +65,4 @@ def main():
         send(('RequestFromClient', "Done"), to = w)
     for c in coords:
         send(('RequestFromClient', "Done"), to = c)
+    send(('RequestFromClient', "Done"), to = dbs)
