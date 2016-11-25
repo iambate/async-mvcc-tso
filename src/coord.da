@@ -57,7 +57,7 @@ class Coord(process):
                 break
 
 
-        if (len(common.mightWriteObj(x, req)) == 0): #its a read only req
+        if (len(common.mightWriteObj(req)) == 0): #its a read only req
             for attr in common.defReadAttr(x, req):
                 latestVersionBefore(x, attr, req.ts).rts = req.ts
         else:
