@@ -38,140 +38,140 @@ class Coord(process):
         await(received("Done"))
 
     def receive(msg=('Request', req, n), from_=p):
-        x = common.obj(req,n)
-        if n == 1:
-            req.ts = now()
-        tobeRead = list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req)) | set(mightWriteAttr(x, req)))
-        '''
-        await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead)
-        '''
-        while true:
-            count_empty = 0
-            for attr in tobeRead:
-                if latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() == True:
-                    count_empty += 1
+    	x = common.obj(req,n)
+    	if n == 1:
+    		req.ts = now()
+    	tobeRead = list(set(mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
+    	'''
+    	await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead)
+    	'''
+    	while true:
+    		count_empty = 0
+    		for attr in tobeRead:
+    			if latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() == True:
+    				count_empty += 1
 
-            if count_empty == len(tobeRead):
-                break
-
-
-        if (len(mightWriteObj(x, req)) == 0): #its a read only req
-            for attr in defReadAttr(x, req):
-                latestVersionBefore(x, attr, req.ts).rts = req.ts
-        else:
-            for attr in defReadAttr(x,req):
-                latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
-        if req.restarted == True:
-            for attr in mightWriteAttr(x, req):
-                latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
-
-        for attr in mightReadAttr(x, req):
-            latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
-
-        req.cachedUpdates[n] = cachedUpdates(x, req)
-        if n == 1:
-            send(('Request',req,n=2),to=coord(obj(req,2),len(coords_list)))
-        else:
-            send(('Request',req),to=Worker[hash(req.id,len(coords_list))])
-
-    def receive(msg=('ReadAttr', req, i)):
-        x = obj(req, i)
-        for attr in mightReadAttr(x, req):
-            v = latestVersionBefore(x, attr, req.ts)
-            if req.id in v.pendingMightRead:
-                v.pendingMightRead.remove(req.id)
-            if attr in req.readAttr[i]:
-                v.rts = req.ts
-        for attr in mightWriteAttr(x, req):
-            v = latestVersionBefore(x, attr, req.ts)
-            if req.id in v.pendingMightRead:
-                v.pendingMightRead.remove(req.id)
-
-    def checkForConflicts(x, req):
-        for (attr, val) in req.updates:
-            v = latestVersionBefore(x,attr,req.ts)
-            if v.rts > req.ts:
-                return true
-        return false
-
-    def receive(msg=('Result',req)):
-        if req.ts < self.sessionID:
-            return
-        x = obj(req,req.updatedObj)
-        conflict = checkForConflicts(x, req)
-
-        if conflict == False:
-            for (attr,val) in req.updates:
-                latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
-
-            start_timer = common.now()
-            timeout = random.random()
-
-            '''
-            await((forall (attr,val) in req.updates :
-                  
-                  (latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == true) or
-                  
-                  (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and
-                
-                    req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), (common.now() - start_timer >= timeout))
-            '''
-            timed_out = False
-            while True:
-                if common.now() - start_timer >= timeout:
-                    timed_out = True
-                    break
-                count_empty = 0
-                for (attr,val) in req.updates:
-                    if latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == true \
-                    or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
-                    req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
-                        count_empty += 1
-                if count_empty == len(req.updates):
-                    break
-            
-            if timed_out == True:
-                send(('Restart', req, 1), to=coord(obj(req,1),len(coords_list)))
-                send(('Restart', req, 2), to=coord(obj(req,2),len(coords_list)))
-                return
+    		if count_empty == len(tobeRead):
+    			break
 
 
-            conflict = checkForConflicts(x, req)
-            
-            if not conflict:
-                send("UpdateDatabase",req.updatedObj,req.updates,req.ts,to=Database)
-                for (attr,val) in req.updates:
-                    v = Versions(req.ts,req.ts,val)
-                    CACHE[x][attr].append(v)
+    	if (len(common.mightWriteObj(x, req)) == 0): #its a read only req
+			for attr in common.defReadAttr(x, req):
+				latestVersionBefore(x, attr, req.ts).rts = req.ts
+		else:
+			for attr in common.defReadAttr(x,req):
+				latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
+		if req.restarted == True:
+			for attr in common.mightWriteAttr(x, req):
+				latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
-                AllAttrsRead = list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req)))
-                for attr in AllAttrsRead:
-                    v = latestVersionBefore(x,attr,req.ts)
-                    v.pendingMightRead.remove(req.id)
-                    if attr in req.readAttr[req.updatedObj]:
-                        v.rts = req.ts
+		for attr in common.mightReadAttr(x, req):
+			latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
+
+		req.cachedUpdates[n] = cachedUpdates(x, req)
+		if n == 1:
+			send(('Request',req,n=2),to=common.coord(common.obj(req,2),len(coords_list)))
+		else:
+			send(('Request',req),to=Worker[common.hash(req.id,len(coords_list))])
+
+	def receive(msg=('ReadAttr', req, i)):
+		x = common.obj(req, i)
+		for attr in mightReadAttr(x, req):
+			v = latestVersionBefore(x, attr, req.ts)
+			if req.id in v.pendingMightRead:
+				v.pendingMightRead.remove(req.id)
+			if attr in req.readAttr[i]:
+				v.rts = req.ts
+		for attr in common.mightWriteAttr(x, req):
+			v = latestVersionBefore(x, attr, req.ts)
+			if req.id in v.pendingMightRead:
+				v.pendingMightRead.remove(req.id)
+
+	def checkForConflicts(x, req):
+		for (attr, val) in req.updates:
+			v = latestVersionBefore(x,attr,req.ts)
+			if v.rts > req.ts:
+				return true
+		return false
+
+	def receive(msg=('Result',req)):
+		if req.ts < self.sessionID:
+			return
+		x = common.obj(req,req.updatedObj)
+		conflict = checkForConflicts(x, req)
+
+		if conflict == False:
+			for (attr,val) in req.updates:
+				latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
+
+			start_timer = common.now()
+			timeout = random.random()
+
+			'''
+			await((forall (attr,val) in req.updates :
+				  
+				  (latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == true) or
+				  
+				  (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and
+				
+					req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), (common.now() - start_timer >= timeout))
+			'''
+			timed_out = False
+			while True:
+				if common.now() - start_timer >= timeout:
+					timed_out = True
+					break
+				count_empty = 0
+				for (attr,val) in req.updates:
+					if latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == true \
+					or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
+					req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
+						count_empty += 1
+				if count_empty == len(req.updates):
+					break
+			
+			if timed_out == True:
+				send(('Restart', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
+				send(('Restart', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+				return
 
 
-                send(('Response', req), to=req.client)
-                send(('ReadAttr', req, 1), coord(obj(req,1),len(coords_list)))
-                send(('ReadAttr', req, 2), coord(obj(req,2),len(coords_list)))
-            else:
-                send(('Restart', req, 1), to=coord(obj(req,1),len(coords_list)))
-                send(('Restart', req, 2), to=coord(obj(req,2),len(coords_list)))
-        else:
-            send(('Restart', req, 1), to=coord(obj(req,1),len(coords_list)))
-            send(('Restart', req, 2), to=coord(obj(req,2),len(coords_list)))
+			conflict = checkForConflicts(x, req)
+			
+			if not conflict:
+				send("UpdateDatabase",req.updatedObj,req.updates,req.ts,to=Database)
+				for (attr,val) in req.updates:
+					v = Versions(req.ts,req.ts,val)
+					CACHE[x][attr].append(v)
+
+				AllAttrsRead = list(set(mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
+				for attr in AllAttrsRead:
+					v = latestVersionBefore(x,attr,req.ts)
+					v.pendingMightRead.remove(req.id)
+					if attr in req.readAttr[req.updatedObj]:
+						v.rts = req.ts
 
 
-    def receive(msg=('Restart', req, n)):
-        x = obj(req, n)
-        
-        for attr in list(set(mightReadAttr(x, req)) | set(defReadAttr(x,req))):
-            latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
+				send(('Response', req), to=req.client)
+				send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
+				send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+			else:
+				send(('Restart', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
+				send(('Restart', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+		else:
+			send(('Restart', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
+			send(('Restart', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
 
 
-        for attr in mightWriteAttr(x, req):
-            latestVersionBefore(x, attr, req.ts).pendingMightWrite.remove(req.id)
-        if n == 2:
-            req.restarted = True
-            send(('Request', req, 1), to=coord(obj(req, 1),len(coords_list)))
+	def receive(msg=('Restart', req, n)):
+		x = obj(req, n)
+		
+		for attr in list(set(mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
+			latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
+
+
+		for attr in common.mightWriteAttr(x, req):
+			latestVersionBefore(x, attr, req.ts).pendingMightWrite.remove(req.id)
+		if n == 2:
+			req.restarted = True
+			send(('Request', req, 1), to=common.coord(common.obj(req, 1),len(coords_list)))
