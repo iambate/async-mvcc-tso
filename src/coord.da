@@ -26,6 +26,7 @@ def cachedUpdates(x, req):
     for attrs in l:
         attrVersion = latestVersionBefore(x, attrs, req.ts)
         cu[attrs] = copy.deepcopy(attrVersion)
+        #cu = {attr1:<version> ,attr2:<version>,..}
     return cu
 
 
@@ -44,8 +45,8 @@ class Coord(process):
     	'''
     	await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead)
     	'''
-    	count_empty = 0
     	while true:
+    		count_empty = 0
     		for attr in tobeRead:
     			if latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() == True:
     				count_empty += 1
@@ -54,7 +55,7 @@ class Coord(process):
     			break
 
 
-    	if (len(mightWriteObj(x, req)) == 0):
+    	if (len(mightWriteObj(x, req)) == 0): #its a read only req
 			for attr in defReadAttr(x, req):
 				latestVersionBefore(x, attr, req.ts).rts = req.ts
 		else:
@@ -69,7 +70,7 @@ class Coord(process):
 
 		req.cachedUpdates[n] = cachedUpdates(x, req)
 		if n == 1:
-			send('Request',req,n=2,to=coord(obj(req,2)))
+			send('Request',req,n=2,to=coord(obj(req,2),len(coords_list)))
 		else:
 			send('Request',req,to=Worker[hash(req.id,len(coords_list))])
 
@@ -130,8 +131,8 @@ class Coord(process):
 					break
 			
 			if timed_out == True:
-				send(('Restart', req, 1), to=coord(obj(req,1)))
-				send(('Restart', req, 2), to=coord(obj(req,2)))
+				send(('Restart', req, 1), to=coord(obj(req,1),len(coords_list)))
+				send(('Restart', req, 2), to=coord(obj(req,2),len(coords_list)))
 				return
 
 
@@ -152,14 +153,14 @@ class Coord(process):
 
 
 				send(('Response', req), to=req.client)
-				send(('ReadAttr', req, 1), coord(obj(req,1)))
-				send(('ReadAttr', req, 2), coord(obj(req,2)))
+				send(('ReadAttr', req, 1), coord(obj(req,1),len(coords_list)))
+				send(('ReadAttr', req, 2), coord(obj(req,2),len(coords_list)))
 			else:
-				send(('Restart', req, 1), to=coord(obj(req,1)))
-				send(('Restart', req, 2), to=coord(obj(req,2)))
+				send(('Restart', req, 1), to=coord(obj(req,1),len(coords_list)))
+				send(('Restart', req, 2), to=coord(obj(req,2),len(coords_list)))
 		else:
-			send(('Restart', req, 1), to=coord(obj(req,1)))
-			send(('Restart', req, 2), to=coord(obj(req,2)))
+			send(('Restart', req, 1), to=coord(obj(req,1),len(coords_list)))
+			send(('Restart', req, 2), to=coord(obj(req,2),len(coords_list)))
 
 
 	def receive(msg=('Restart', req, n)):
@@ -173,4 +174,4 @@ class Coord(process):
 			latestVersionBefore(x, attr, req.ts).pendingMightWrite.remove(req.id)
 		if n == 2:
 			req.restarted = True
-			send(('Request', req, 1), to=coord(obj(req, 1)))
+			send(('Request', req, 1), to=coord(obj(req, 1),len(coords_list)))
