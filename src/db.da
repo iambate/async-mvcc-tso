@@ -18,12 +18,10 @@ class DB(process):
                 self.database[obj][attr] = common.Versions(wts=ts, value=_db[obj][attr])
         for obj in self.database:
             for attr in self.database[obj]:
-                print(self.database[obj][attr])
+                pass
+                # print(self.database[obj][attr])
 
-        await(received(('RequestFromClient', "Done")))
-
-    def receive(msg=('RequestFromClient', R), from_=p):
-            pass
+        await(received(('Done')))
 
     def receive(msg=('Read', unique_db_req, obj, attrs), from_=p):
             reply = {}
