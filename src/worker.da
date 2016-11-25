@@ -60,19 +60,17 @@ class Worker(process):
         for i in [1, 2]:
             unique_db_req = str(R.id) + str(rule_no) + str(i)
             output("Sending Read to Db: ", unique_db_req)
-            send(('Read', unique_db_req, objs[i-1], attr_from_db[i]), to=self.db)
-            await(some(received(('ReadDbResponse', unique_db_req, newR))))
+            send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.db)
+            await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
             output("Received response from Db: ", unique_db_req)
-            for attr in newR:
-                if attr not in R.readAttr[i]:
-                    R.readAttr[i][attr] = {}
+            for attr in newR.keys():
                 R.readAttr[i][attr] = newR[attr]
         return R
 
     def doWork(work):
         rules = work['rules']
         R = work['request']
-        output("Processing to Work: ", R)
+        output("Proceeding to Work: ", R)
         p= work['fromProcess']
         coords_list = work['coords_list']
         o1 = common.obj(R, 1)
@@ -95,17 +93,12 @@ class Worker(process):
                             R.readAttr[i][attrs] = {}
                         R.readAttr[i][attr] = cachedUpdates[n][attrs]
                     else:
-                        attr_from_db[i] += attrs
+                        attr_from_db[i] += [attrs]
             R = readFromDB(R, [o1,o2], attr_from_db, rule_no)
             result = evaluate(rule, R)
             if result.decision == 'permit' or result.decision == 'deny':
                             break
             rule_no += 1
-        # Remove duplicates
-        l = list(set(R.readAttr[1]))
-        R.readAttr[1] = l
-        l = list(set(R.readAttr[2]))
-        R.readAttr[2] = l
         if result.decision == None:
             R.decision = 'deny'
         else:

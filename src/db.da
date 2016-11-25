@@ -1,3 +1,4 @@
+import commonpy
 import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -15,18 +16,14 @@ class DB(process):
         for obj in _db:
             self.database[obj] = {}
             for attr in _db[obj]:
-                self.database[obj][attr] = common.Versions(wts=ts, value=_db[obj][attr])
-        for obj in self.database:
-            for attr in self.database[obj]:
-                pass
-                # print(self.database[obj][attr])
+                self.database[obj][attr] = [common.Versions(wts=ts, value=_db[obj][attr])]
 
         await(received(('Done')))
 
-    def receive(msg=('Read', unique_db_req, obj, attrs), from_=p):
-            print("Read Request to Worker: ", unique_db_req)
+    def receive(msg=('Read', unique_db_req, obj, attrs, ts), from_=p):
             reply = {}
-            if obj in self.database:
+            if obj.id in self.database:
                 for attr in attrs:
-                    if attr in self.database[obj]: reply[attr] = self.database[obj][attr]
+                    if attr in self.database[obj.id]:
+                        reply[attr] = commonpy.max_version(list(v for v in self.database[obj.id][attr] if v.wts < ts))
             send(('ReadDbResponse', unique_db_req, reply), to=p)

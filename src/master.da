@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import uuid
@@ -13,7 +14,8 @@ common = import_da("common")
 
 class Client(process):
     def setup(coords_list, requestNo):
-        pass
+        logging.basicConfig(filename= THIS_DIR + '/log' + str(requestNo), filemode='a', level=logging.DEBUG)
+        self.logger = logging.getLogger()
 
     def run():
         requests = conf.cnfg[requestNo].requests
@@ -35,7 +37,7 @@ class Client(process):
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
 
     def receive(msg=('Response', response)):
-        print(response)
+        self.logger.debug(response)
         pass
 
 

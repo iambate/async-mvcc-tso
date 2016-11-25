@@ -51,7 +51,7 @@ class Request:
         self.resource_mightRead =[]
         self.subject_mightRead = []
         self.mightWriteObj = []
-        self.readAttr = [[], [], []]
+        self.readAttr = { 1: {}, 2: {}}
         self.cachedUpdates = [[], [], []]
         self.subject_mightWriteAttr = []
         self.resource_mightWriteAttr = []

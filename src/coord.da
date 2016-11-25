@@ -1,3 +1,4 @@
+import commonpy
 import copy
 import os
 import sys
@@ -9,11 +10,11 @@ common = import_da('common')
 CACHE = {}
 
 def latestVersionBefore(x, attr, ts):
-    prevI = -1
+    prevI = []
     if x in CACHE and attr in CACHE[x]:
-        prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
+        prevI = commonpy.max_version((list(i for i in CACHE[x][attr] if i.wts < ts)))
 
-    if prevI == -1:
+    if prevI == []:
         if x not in CACHE:
             CACHE[x] = {}
         if attr not in CACHE[x]:
@@ -77,6 +78,7 @@ class Coord(process):
             send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list))])
 
     def receive(msg=('ReadAttr', req, i)):
+        output("received a ReadAttr request for object:", i, ",Request: ",req)
         x = common.obj(req, i)
         for attr in common.mightReadAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)
