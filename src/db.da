@@ -2,19 +2,32 @@ import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
-from config import master_config
+from config import master_config as conf
 common = import_da('common')
 
 class DB(process):
     def setup(requestNo):
-        pass
+        self.database = {}
 
     def run():
+        _db = conf.cnfg[requestNo].database
+        ts = common.now()
+        for obj in _db:
+            self.database[obj] = {}
+            for attr in _db[obj]:
+                self.database[obj][attr] = common.Versions(wts=ts, value=_db[obj][attr])
+        for obj in self.database:
+            for attr in self.database[obj]:
+                print(self.database[obj][attr])
+
         await(received(('RequestFromClient', "Done")))
 
     def receive(msg=('RequestFromClient', R), from_=p):
             pass
 
-    def receive(msg=('Read', unique_db_req, R, attr_from_db), from_=p):
-        if type(R) == common.Request:
-            send(('ReadDbResponse', unique_db_req, R), to=p)
+    def receive(msg=('Read', unique_db_req, obj, attrs), from_=p):
+            reply = {}
+            if obj in self.database:
+                for attr in attrs:
+                    if attr in self.database[obj]: reply[attr] = self.database[obj][attr]
+            send(('ReadDbResponse', unique_db_req, reply), to=p)

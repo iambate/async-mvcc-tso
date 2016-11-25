@@ -28,6 +28,15 @@ class Versions:
         self.pendingMightWrite = []
 
     def __str__(self):
+       return   "rts: " + str(self.rts) + \
+                "\nwts: " + str(self.wts) + \
+                "\nvalue: " + str(self.value) + \
+                "\npendingMightRead: " + str(self.pendingMightRead) + \
+                "\npendingMightWrite: " + str(self.pendingMightWrite) + \
+                "\n"
+
+
+    def __str__(self):
         return  "rts: " + str(self.rts) + \
                 "\nwts: " + str(self.wts) + \
                 "\nvalue: " + str(self.value) + \
@@ -176,7 +185,7 @@ def mightWriteAttr(x, req):
 
 
 def now():
-   time.time()
+   return time.time()
 
 def obj(req, i):
     return req.objects[i]
