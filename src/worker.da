@@ -13,8 +13,177 @@ class Result:
         self.updatedObj = updatedObj    # object that will be updated
         self.updates = updates          # [<attr1, value1>, <attr2, value2>, ..]
 
+def apply_Operation(old_val_of_attr,operation):
+    #do processing
+    return old_val_of_attr
+
 def evaluate(rule, req):
-    return Result()
+    decision = "deny"
+    updatedObj = None
+    updates = dict()
+    '''
+    req: readAttr[1] = {1_attr1:ver, 1_attr2:ver,....} for objects[1]
+
+    '''
+    sc = rule.find('subjectCondition')
+    rc=rule.find('resourceCondition')
+    act=rule.find('action')
+    if req.subject == common.obj(req,1):
+        '''
+        readAttr[1] refers to all subject attributes
+        '''
+        count_match_sub_attr = 0
+        for rule_attr in sc.attrib.keys():
+            curr_val_of_attribute = req.readAttr[1][rule_attr].value
+            val_to_match_against = sc.attrib[rule_attr]
+            if curr_val_of_attribute == val_to_match_against:
+                count_match_sub_attr += 1
+        if count_match_sub_attr != len(sc.attrib.keys()):
+            result = Result(decision,updatedObj,updates)
+            return Result
+
+        count_match_sub_attr = 0
+        for rule_attr in rc.attrib.keys():
+            curr_val_of_attribute = req.readAttr[2][rule_attr].value
+            val_to_match_against = rc.attrib[rule_attr]
+            if curr_val_of_attribute == val_to_match_against:
+                count_match_sub_attr += 1
+
+        if count_match_sub_attr != len(rc.attrib.keys()):
+            result = Result(decision,updatedObj,updates)
+            return Result
+        sUpdate=rule.find('subjectUpdate')
+        rUpdate=rule.find('resourceUpdate')
+        if sUpdate == None and rUpdate == None:
+            result = Result('permit',updatedObj,updates)
+            return Result
+        if sUpdate != None:
+            updatedObj = req.subject
+            for attribute_to_update in sUpdate.attrib:
+                old_val_of_attr = req.readAttr[1][attribute_to_update].value
+                operation = sUpdate.attrib[attribute_to_update]
+                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+            result = Result('permit',updatedObj,updates)
+            return result
+        else:
+            updatedObj = req.resource
+            for attribute_to_update in rUpdate.attrib:
+                old_val_of_attr = req.readAttr[2][attribute_to_update].value
+                operation = rUpdate.attrib[attribute_to_update]
+                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+            result = Result('permit',updatedObj,updates)
+            return result
+        
+    else:
+        '''
+        readAttr[1] refers to all resource attributes
+        '''
+        count_match_sub_attr = 0
+        for rule_attr in rc.attrib.keys():
+            curr_val_of_attribute = req.readAttr[1][rule_attr].value
+            val_to_match_against = rc.attrib[rule_attr]
+            if curr_val_of_attribute == val_to_match_against:
+                count_match_sub_attr += 1
+        if count_match_sub_attr != len(rc.attrib.keys()):
+            result = Result(decision,updatedObj,updates)
+            return Result
+
+        count_match_sub_attr = 0
+        for rule_attr in sc.attrib.keys():
+            curr_val_of_attribute = req.readAttr[2][rule_attr].value
+            val_to_match_against = sc.attrib[rule_attr]
+            if curr_val_of_attribute == val_to_match_against:
+                count_match_sub_attr += 1
+
+        if count_match_sub_attr != len(sc.attrib.keys()):
+            result = Result(decision,updatedObj,updates)
+            return Result
+        
+        sUpdate=rule.find('subjectUpdate')
+        rUpdate=rule.find('resourceUpdate')
+        if sUpdate == None and rUpdate == None:
+            result = Result('permit',updatedObj,updates)
+            return Result
+        if sUpdate != None:
+            updatedObj = req.subject
+            for attribute_to_update in sUpdate.attrib:
+                old_val_of_attr = req.readAttr[2][attribute_to_update].value
+                operation = sUpdate.attrib[attribute_to_update]
+                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+            result = Result('permit',updatedObj,updates)
+            return result
+        else:
+            updatedObj = req.resource
+            for attribute_to_update in rUpdate.attrib:
+                old_val_of_attr = req.readAttr[1][attribute_to_update].value
+                operation = rUpdate.attrib[attribute_to_update]
+                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+            result = Result('permit',updatedObj,updates)
+            return result
+    '''
+
+     tree = ET.parse('policy-example.xml')
+        root = tree.getroot()
+        policy = False
+        subject_update = {}
+        resource_update = {}
+
+        for rule in root.iter('rule'):
+            match = 0
+            sc=rule.find('subjectCondition')
+            if len(sc.attrib) == len(temp_db["subject"]):
+                for key in sc.attrib:
+                    if sc.attrib[key][0] == '>' or sc.attrib[key][0] == '<' or sc.attrib[key][0] == '=':
+                        ans = eval(str(temp_db["subject"][key])+str(sc.attrib[key]))
+                        if ans == True:
+                            match = match + 1
+                    elif temp_db["subject"][key] == sc.attrib[key]:
+                        match = match + 1
+                
+            rc=rule.find('resourceCondition')
+            if len(rc.attrib) == len(temp_db["resource"]):
+                for key in rc.attrib:
+                    if rc.attrib[key][0] == '>' or rc.attrib[key][0] == '<' or rc.attrib[key][0] == '=':
+                        ans = eval(str(temp_db["resource"][key])+str(rc.attrib[key]))
+                        if ans == True:
+                            match = match + 1
+                    elif temp_db["resource"][key] == rc.attrib[key]:
+                        match = match + 1
+                
+            act=rule.find('action')
+            for key in act.attrib:
+                    if temp_db["action"][key] == act.attrib[key]:
+                        match = match + 1
+                
+            if match == len(sc.attrib) + len(rc.attrib) + len(act.attrib):
+                su=rule.find('subjectUpdate')
+                if su != None:
+                    for key in su.attrib:
+                        if su.attrib[key][0] == '+' or su.attrib[key][0] == '-' or su.attrib[key][0] == '*' or su.attrib[key][0] == '/':
+                            subject_update[key] = eval(str(temp_db["subject"][key])+str(su.attrib[key]))
+                        else:
+                            subject_update[key] = su.attrib[key]
+
+                ru=rule.find('resourceUpdate')
+                if ru != None:
+                    for key in ru.attrib:
+                        if ru.attrib[key][0] == '+' or ru.attrib[key][0] == '-' or ru.attrib[key][0] == '*' or ru.attrib[key][0] == '/' or ru.attrib[key][0] == '=':
+                            if ru.attrib[key][0] == '+':
+                                resource_update[key] = int(temp_db["resource"][key]) + 1
+                            elif ru.attrib[key][0] == '-':
+                                resource_update[key] = int(temp_db["resource"][key]) - 1
+                            
+                        else:
+                            resource_update[key] = ru.attrib[key]
+                    
+                policy = True
+                break
+        
+        if policy == False:
+            return (False,{},{})
+        else:
+            return (True,subject_update,resource_update)
+    '''
 
 def staticAnalysis(req):
     tree = ET.parse(THIS_DIR + '/../policy-example.xml')
