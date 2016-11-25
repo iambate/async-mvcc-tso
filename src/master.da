@@ -48,7 +48,7 @@ def main():
     dbs = new(db.DB, num = 1)
 
     setup(dbs, (requestNo,))
-    setup(workers, (coords, dbs, requestNo))
+    setup(workers, (list(coords), dbs, requestNo))
     setup(coords, (list(coords), list(workers), requestNo))
     setup(clients, (list(coords), requestNo))
 

@@ -78,7 +78,7 @@ class Coord(process):
 
     def receive(msg=('ReadAttr', req, i)):
         x = common.obj(req, i)
-        for attr in mightReadAttr(x, req):
+        for attr in common.mightReadAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)
             if req.id in v.pendingMightRead:
                 v.pendingMightRead.remove(req.id)
@@ -146,7 +146,7 @@ class Coord(process):
                     v = Versions(req.ts,req.ts,val)
                     CACHE[x][attr].append(v)
 
-                AllAttrsRead = list(set(mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
+                AllAttrsRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
                 for attr in AllAttrsRead:
                     v = latestVersionBefore(x,attr,req.ts)
                     v.pendingMightRead.remove(req.id)
@@ -168,7 +168,7 @@ class Coord(process):
     def receive(msg=('Restart', req, n)):
         x = obj(req, n)
         
-        for attr in list(set(mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
+        for attr in list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
             latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
 
 
