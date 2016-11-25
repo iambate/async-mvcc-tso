@@ -50,7 +50,7 @@ class Coord(process):
         while True:
             count_empty = 0
             for attr in tobeRead:
-                if latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() == True:
+                if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
                     count_empty += 1
 
             if count_empty == len(tobeRead):
@@ -125,7 +125,7 @@ class Coord(process):
                     break
                 count_empty = 0
                 for (attr,val) in req.updates:
-                    if latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == True \
+                    if len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 0 \
                     or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
                     req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
                         count_empty += 1
