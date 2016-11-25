@@ -70,9 +70,9 @@ class Coord(process):
 
 		req.cachedUpdates[n] = cachedUpdates(x, req)
 		if n == 1:
-			send('Request',req,n=2,to=coord(obj(req,2),len(coords_list)))
+			send(('Request',req,n=2),to=coord(obj(req,2),len(coords_list)))
 		else:
-			send('Request',req,to=Worker[hash(req.id,len(coords_list))])
+			send(('Request',req),to=Worker[hash(req.id,len(coords_list))])
 
 	def receive(msg=('ReadAttr', req, i)):
 		x = obj(req, i)

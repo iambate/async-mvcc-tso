@@ -36,14 +36,6 @@ class Versions:
                 "\n"
 
 
-    def __str__(self):
-        return  "rts: " + str(self.rts) + \
-                "\nwts: " + str(self.wts) + \
-                "\nvalue: " + str(self.value) + \
-                "\npendingMightRead: " + str(self.pendingMightRead) + \
-                "\npendingMightWrite: " + str(self.pendingMightWrite)
-
-
 class Request:
     '''
     the following dictionaries will contain all attributes of the resource
