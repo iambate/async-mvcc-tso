@@ -116,7 +116,7 @@ def populateRequest(req):
                     res_attributes[key] = res_attributes[key] + 1
                 else:
                     res_attributes[key] = 1
-            
+
             sub_write=rule.find('subjectUpdate')
             if sub_write != None and subject not in req.mightWriteObj:
                 req.mightWriteObj.append(subject)
