@@ -134,7 +134,7 @@ class Worker(process):
             else:
                 break
 
-    def receive(msg=('RequestFromCoord', R), from_=p):
+    def receive(msg=('Request', R), from_=p):
         rules = staticAnalysis(R)
         work = {}
         work['rules'] = rules
