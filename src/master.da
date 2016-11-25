@@ -14,8 +14,7 @@ common = import_da("common")
 
 class Client(process):
     def setup(coords_list, requestNo):
-        logging.basicConfig(filename= THIS_DIR + '/log' + str(requestNo), filemode='a', level=logging.DEBUG)
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
 
     def run():
         requests = conf.cnfg[requestNo].requests
@@ -37,13 +36,22 @@ class Client(process):
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
 
     def receive(msg=('Response', response)):
-        self.logger.debug(response)
-        pass
+        self.logger.info(str(response))
 
 
 def main():
     # Access configuration
+
     requestNo = int(sys.argv[1])
+    logfile = THIS_DIR + "/../log/request_"+ str(requestNo) + ".log"
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    handler = logging.FileHandler(logfile)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
     workers = new(worker.Worker, num = 6)

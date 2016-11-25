@@ -1,5 +1,6 @@
 import commonpy
 import copy
+import logging
 import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -37,6 +38,7 @@ def cachedUpdates(x, req):
 class Coord(process):
     def setup(coords_list, workers_list, requestNo):
         self.sessionID = common.now()
+        self.logger = logging.getLogger("master")
 
     def run():
         await(received("Done"))
@@ -78,7 +80,7 @@ class Coord(process):
             send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list))])
 
     def receive(msg=('ReadAttr', req, i)):
-        output("received a ReadAttr request for object:", i, ",Request: ",req)
+        self.logger.debug("received a ReadAttr request for object: %d, Request: "+ str(req), i)
         x = common.obj(req, i)
         for attr in common.mightReadAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)

@@ -1,4 +1,5 @@
 import commonpy
+import logging
 import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -9,6 +10,7 @@ common = import_da('common')
 class DB(process):
     def setup(requestNo):
         self.database = {}
+        self.logger = logging.getLogger("master")
 
     def run():
         _db = conf.cnfg[requestNo].database
@@ -21,6 +23,7 @@ class DB(process):
         await(received(('Done')))
 
     def receive(msg=('Read', unique_db_req, obj, attrs, ts), from_=p):
+            self.logger.debug("DB received request: %s", unique_db_req)
             reply = {}
             if obj.id in self.database:
                 for attr in attrs:
