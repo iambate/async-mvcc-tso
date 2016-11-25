@@ -24,7 +24,7 @@ def latestVersionBefore(x, attr, ts):
 
 def cachedUpdates(x, req):
     cu = {}
-    l = {attr: attr in common.mightReadAttr(x, req) and attr in common.defReadAttr(x, req)}
+    l = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
     for attrs in l:
         attrVersion = latestVersionBefore(x, attrs, req.ts)
         cu[attrs] = copy.deepcopy(attrVersion)
