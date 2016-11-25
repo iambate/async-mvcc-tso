@@ -24,6 +24,7 @@ class DB(process):
         await(received(('Done')))
 
     def receive(msg=('Read', unique_db_req, obj, attrs), from_=p):
+            print("Read Request to Worker: ", unique_db_req)
             reply = {}
             if obj in self.database:
                 for attr in attrs:

@@ -180,4 +180,4 @@ def now():
    return time.time()
 
 def obj(req, i):
-    return req.objects[i]
+    return req.objects[i-1]

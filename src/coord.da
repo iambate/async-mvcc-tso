@@ -1,3 +1,4 @@
+import copy
 import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -56,7 +57,6 @@ class Coord(process):
             if count_empty == len(tobeRead):
                 break
 
-
         if (len(common.mightWriteObj(req)) == 0): #its a read only req
             for attr in common.defReadAttr(x, req):
                 latestVersionBefore(x, attr, req.ts).rts = req.ts
@@ -72,9 +72,9 @@ class Coord(process):
 
         req.cachedUpdates[n] = cachedUpdates(x, req)
         if n == 1:
-            send(('Request',req,2),to=common.coord(common.obj(req,2),len(coords_list)))
+            send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
         else:
-            send(('Request',req),to=Worker[common.hash(req.id,len(coords_list))])
+            send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list))])
 
     def receive(msg=('ReadAttr', req, i)):
         x = common.obj(req, i)
@@ -133,8 +133,8 @@ class Coord(process):
                     break
             
             if timed_out == True:
-                send(('Restart', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
-                send(('Restart', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+                send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
+                send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
                 return
 
 
@@ -155,14 +155,14 @@ class Coord(process):
 
 
                 send(('Response', req), to=req.client)
-                send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
-                send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+                send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
+                send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
             else:
-                send(('Restart', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
-                send(('Restart', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+                send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
+                send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
         else:
-            send(('Restart', req, 1), to=common.coord(common.obj(req,1),len(coords_list)))
-            send(('Restart', req, 2), to=common.coord(common.obj(req,2),len(coords_list)))
+            send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
+            send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
 
 
     def receive(msg=('Restart', req, n)):
@@ -176,4 +176,4 @@ class Coord(process):
             latestVersionBefore(x, attr, req.ts).pendingMightWrite.remove(req.id)
         if n == 2:
             req.restarted = True
-            send(('Request', req, 1), to=common.coord(common.obj(req, 1),len(coords_list)))
+            send(('Request', req, 1), to=common.coord(common.obj(req, 1), coords_list))

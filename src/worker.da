@@ -8,12 +8,12 @@ from config import master_config
 common = import_da('common')
 
 class Result:
-    def __init__(decision = 'deny', updatedObj = None, updates = []):
+    def __init__(self, decision = 'deny', updatedObj = None, updates = []):
         self.decision = decision        # deny or permit
         self.updatedObj = updatedObj    # object that will be updated
         self.updates = updates          # [<attr1, value1>, <attr2, value2>, ..]
 
-def evaulate(rule, req):
+def evaluate(rule, req):
     return Result()
 
 def staticAnalysis(req):
@@ -56,11 +56,13 @@ class Worker(process):
     def setup(coords_list, db, requestNo):
         self.q = queue.Queue()
 
-    def readFromDB(R, attr_from_db, rule_no):
+    def readFromDB(R, objs, attr_from_db, rule_no):
         for i in [1, 2]:
-            unique_db_req = str(R.id) + str(rule_no) + str(i) 
-            send(('Read', unique_db_req, attr_from_db[i]), to=self.db)
+            unique_db_req = str(R.id) + str(rule_no) + str(i)
+            output("Sending Read to Db: ", unique_db_req)
+            send(('Read', unique_db_req, objs[i-1], attr_from_db[i]), to=self.db)
             await(some(received(('ReadDbResponse', unique_db_req, newR))))
+            output("Received response from Db: ", unique_db_req)
             for attr in newR:
                 if attr not in R.readAttr[i]:
                     R.readAttr[i][attr] = {}
@@ -70,13 +72,15 @@ class Worker(process):
     def doWork(work):
         rules = work['rules']
         R = work['request']
+        output("Processing to Work: ", R)
         p= work['fromProcess']
         coords_list = work['coords_list']
-        o = common.obj(R, 1)
+        o1 = common.obj(R, 1)
+        o2 = common.obj(R, 2)
         rule_no = 0
         for rule in rules:
             attr_list = {}
-            if o == R.subject:
+            if o1 == R.subject:
                 attr_list[1] = getAttrNeeded(rule, common.ObjectTypeEnum.SUBJECT)
                 attr_list[2] = getAttrNeeded(rule, common.ObjectTypeEnum.RESOURCE)
             else:
@@ -92,8 +96,8 @@ class Worker(process):
                         R.readAttr[i][attr] = cachedUpdates[n][attrs]
                     else:
                         attr_from_db[i] += attrs
-            R = readFromDB(R, attr_from_db, rule_no)
-            result = evalute(rule, R)
+            R = readFromDB(R, [o1,o2], attr_from_db, rule_no)
+            result = evaluate(rule, R)
             if result.decision == 'permit' or result.decision == 'deny':
                             break
             rule_no += 1
@@ -103,9 +107,9 @@ class Worker(process):
         l = list(set(R.readAttr[2]))
         R.readAttr[2] = l
         if result.decision == None:
-            req.decision = 'deny'
+            R.decision = 'deny'
         else:
-            req.decision = result.decision
+            R.decision = result.decision
 
         if result.updatedObj == None:
             # Read Request
@@ -113,6 +117,7 @@ class Worker(process):
             R.rdOnlyObj = -1
             R.updates = []
             send(('Response', R), to=R.client)
+            output("Read Only Request. Sending request to client: ", R)
             for i in [1, 2]:
                 send(('ReadAttr', R, i), to=common.coord(common.obj(R,i), coords_list))
         else:
@@ -135,6 +140,7 @@ class Worker(process):
                 break
 
     def receive(msg=('Request', R), from_=p):
+        output("Request received by worker: ", R)
         rules = staticAnalysis(R)
         work = {}
         work['rules'] = rules
