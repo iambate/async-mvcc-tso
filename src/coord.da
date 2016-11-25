@@ -8,9 +8,9 @@ common = import_da('common')
 CACHE = {}
 
 def latestVersionBefore(x, attr, ts):
-	prevI = -1
-	if x in CACHE and attr in CACHE[x]:
-    	prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
+    prevI = -1
+    if x in CACHE and attr in CACHE[x]:
+        prevI = max ((list(i for i in CACHE[x][attr] if i.wts < ts)) or [-1])
 
     if prevI == -1:
         if x not in CACHE:
