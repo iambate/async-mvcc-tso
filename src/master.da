@@ -42,6 +42,9 @@ class Client(process):
 def main():
     # Access configuration
 
+    if len(sys.argv) < 2:
+        print("Pass the configuration Number");
+        exit(1)
     requestNo = int(sys.argv[1])
     logfile = THIS_DIR + "/../log/request_"+ str(requestNo) + ".log"
     logger = logging.getLogger(__name__)

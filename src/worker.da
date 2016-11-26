@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import logging
 import os
 import sys
 import queue
@@ -162,15 +163,16 @@ def getAttrNeeded(rule, type):
 
 class Worker(process):
     def setup(coords_list, dbs_list, requestNo):
+        self.logger = logging.getLogger("master")
         self.q = queue.Queue()
 
     def readFromDB(R, objs, attr_from_db, rule_no, db_no):
         for i in [1, 2]:
             unique_db_req = str(R.id) + str(rule_no) + str(i)
-            output("Sending Read to Db: ", unique_db_req)
+            self.logger.debug("Sending Read to Db: %s", unique_db_req)
             send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[db_no])
             await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
-            output("Received response from Db: ", unique_db_req)
+            self.logger.debug("Received response from Db: %s", unique_db_req)
             for attr in newR.keys():
                 R.readAttr[i][attr] = newR[attr]
         return R
@@ -178,7 +180,7 @@ class Worker(process):
     def doWork(work):
         rules = work['rules']
         R = work['request']
-        output("Proceeding to Work: ", R)
+        self.logger.debug("Proceeding to Work: %s", R)
         p= work['fromProcess']
         coords_list = work['coords_list']
         worker_no = work['worker_no']
@@ -219,7 +221,7 @@ class Worker(process):
             R.rdOnlyObj = -1
             R.updates = []
             send(('Response', R), to=R.client)
-            output("Read Only Request. Sending request to client: ", R)
+            self.logger.debug("Read Only Request. Sending request to client: %s", R)
             for i in [1, 2]:
                 send(('ReadAttr', R, i), to=common.coord(common.obj(R,i), coords_list))
         else:
@@ -242,7 +244,7 @@ class Worker(process):
                 break
 
     def receive(msg=('Request', R), from_=p):
-        output("Request received by worker: ", R)
+        self.logger.debug("Request received by worker: %s", R)
         rules = staticAnalysis(R)
         work = {}
         work['rules'] = rules
