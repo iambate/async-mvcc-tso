@@ -34,7 +34,6 @@ def Match(curr_val_of_attribute, val_to_match_against):
     return False
 
 def evaluate(rule, req):
-    return Result()
     decision = "deny"
     updatedObj = None
     updates = dict()
@@ -54,6 +53,7 @@ def evaluate(rule, req):
     
     count_match_sub_attr = 0
     for rule_attr in sc.attrib.keys():
+        print(req.readAttr)
         curr_val_of_attribute = req.readAttr[sub_index][rule_attr].value
         val_to_match_against = sc.attrib[rule_attr]
         if Match(curr_val_of_attribute, val_to_match_against):
@@ -141,7 +141,7 @@ class Worker(process):
         for i in [1, 2]:
             unique_db_req = str(R.id) + str(rule_no) + str(i)
             self.logger.debug("Sending Read to Db: %s", unique_db_req)
-            send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[db_no])
+            send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[0])
             await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
             self.logger.debug("Received response from Db: %s", unique_db_req)
             for attr in newR.keys():
@@ -204,7 +204,7 @@ class Worker(process):
                 R.updatedObj = 2
                 R.rdOnlyObj = 1
             R.updates = result.updates
-            send(('Result', R), to=coord(result.updatedObj))
+            send(('Result', R), to=common.coord(common.obj(R, R.updatedObj), coords_list))
 
     def run():
         while True:

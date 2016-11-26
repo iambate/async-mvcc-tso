@@ -58,11 +58,11 @@ def main():
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
     workers = new(worker.Worker, num = 6)
-    dbs = new(db.DB, num = 6)
+    dbs = new(db.DB, num = 1)
 
     setup(dbs, (requestNo,))
     setup(workers, (list(coords), list(dbs), requestNo))
-    setup(coords, (list(coords), list(workers), requestNo))
+    setup(coords, (list(coords), list(workers), list(dbs), requestNo))
     setup(clients, (list(coords), requestNo))
 
     start(dbs)

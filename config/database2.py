@@ -2,31 +2,33 @@ attribute_db = {
         1:
             {
                 "name": "Tom",
-                "position" : "employee",
+                "type" : "employee",
                 "history": "empty"
             }
         ,
         2:
             {
                 "name": "Jack",
-                "position": "employee",
+                "type": "employee",
                 "history": "empty"
             }
         ,
         257:
             {
-                "name": "BankA"
+                "name": "BankA",
+                "type" : "bank"
             }
         ,
         258:
             {
-                "name": "BankB"
+                "name": "BankB",
+                "type" : "bank"
             }
         ,
         3:
             {
                 "name": "Sahil",
-                "position" : "employee",
+                "type" : "employee",
                 "history": 258
             }
 }

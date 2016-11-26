@@ -1,6 +1,7 @@
 import commonpy
 import copy
 import logging
+import random
 import os
 import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -36,7 +37,7 @@ def cachedUpdates(x, req):
 
 
 class Coord(process):
-    def setup(coords_list, workers_list, requestNo):
+    def setup(coords_list, workers_list, dbs_list, requestNo):
         self.sessionID = common.now()
         self.logger = logging.getLogger("master")
 
@@ -85,20 +86,22 @@ class Coord(process):
         for attr in common.mightReadAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)
             if req.id in v.pendingMightRead:
+                self.logger.debug("ReadAttr mightRead :%s", v)
                 v.pendingMightRead.remove(req.id)
             if attr in req.readAttr[i]:
                 v.rts = req.ts
         for attr in common.mightWriteAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)
             if req.id in v.pendingMightRead:
+                self.logger.debug("ReadAttr mightWrite :%s", v)
                 v.pendingMightRead.remove(req.id)
 
     def checkForConflicts(x, req):
-        for (attr, val) in req.updates:
+        for attr in req.updates.keys():
             v = latestVersionBefore(x,attr,req.ts)
             if v.rts > req.ts:
                 return True
-        return false
+        return False
 
     def receive(msg=('Result',req)):
         if req.ts < self.sessionID:
@@ -107,14 +110,14 @@ class Coord(process):
         conflict = checkForConflicts(x, req)
 
         if conflict == False:
-            for (attr,val) in req.updates:
+            for attr in req.updates.keys():
                 latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
             start_timer = common.now()
             timeout = random.random()
 
             '''
-            await((forall (attr,val) in req.updates :
+            await((forall attr in req.updates.keys():
                   
                   (latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == True) or
                   
@@ -128,7 +131,7 @@ class Coord(process):
                     timed_out = True
                     break
                 count_empty = 0
-                for (attr,val) in req.updates:
+                for attr in req.updates.keys():
                     if len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 0 \
                     or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
                     req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
@@ -145,15 +148,18 @@ class Coord(process):
             conflict = checkForConflicts(x, req)
             
             if not conflict:
-                send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=Database)
-                for (attr,val) in req.updates:
-                    v = Versions(req.ts,req.ts,val)
+                send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])
+                for attr in req.updates.keys():
+                    v = common.Versions(req.ts,req.ts,req.updates[attr])
                     CACHE[x][attr].append(v)
 
                 AllAttrsRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
                 for attr in AllAttrsRead:
                     v = latestVersionBefore(x,attr,req.ts)
-                    v.pendingMightRead.remove(req.id)
+                    self.logging.debug("No conflict: %s", v)
+                    # Verify Again
+                    if req.id in v.pendingMightRead:
+                        v.pendingMightRead.remove(req.id)
                     if attr in req.readAttr[req.updatedObj]:
                         v.rts = req.ts
 
@@ -173,6 +179,7 @@ class Coord(process):
         x = obj(req, n)
         
         for attr in list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
+            self.logger.debug("Restart request: %s", latestVersionBefore(x, attr, req.ts))
             latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
 
 
