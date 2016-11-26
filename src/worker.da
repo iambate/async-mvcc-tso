@@ -15,9 +15,20 @@ class Result:
         self.updates = updates          # [<attr1, value1>, <attr2, value2>, ..]
 
 def apply_Operation(old_val_of_attr,operation):
-    #do processing
+    if operation == '++':
+        old_val_of_attr =int(old_val_of_attr) + 1
+    elif operation == "--":
+        old_val_of_attr = int(old_val_of_attr)  - 1
+    else:
+        return operation
     
     return old_val_of_attr
+def Match(curr_val_of_attribute, val_to_match_against):
+    if val_to_match_against == 'empty':
+        val_to_match_against == None
+    if curr_val_of_attribute == val_to_match_against:
+        return True
+    return False
 
 def evaluate(rule, req):
     return Result()
@@ -39,7 +50,7 @@ def evaluate(rule, req):
         for rule_attr in sc.attrib.keys():
             curr_val_of_attribute = req.readAttr[1][rule_attr].value
             val_to_match_against = sc.attrib[rule_attr]
-            if curr_val_of_attribute == val_to_match_against:
+            if Match(curr_val_of_attribute , val_to_match_against):
                 count_match_sub_attr += 1
         if count_match_sub_attr != len(sc.attrib.keys()):
             result = Result(decision,updatedObj,updates)
@@ -49,12 +60,13 @@ def evaluate(rule, req):
         for rule_attr in rc.attrib.keys():
             curr_val_of_attribute = req.readAttr[2][rule_attr].value
             val_to_match_against = rc.attrib[rule_attr]
-            if curr_val_of_attribute == val_to_match_against:
+            if Match(curr_val_of_attribute, val_to_match_against):
                 count_match_sub_attr += 1
 
         if count_match_sub_attr != len(rc.attrib.keys()):
             result = Result(decision,updatedObj,updates)
             return Result
+        
         sUpdate=rule.find('subjectUpdate')
         rUpdate=rule.find('resourceUpdate')
         if sUpdate == None and rUpdate == None:
@@ -85,7 +97,7 @@ def evaluate(rule, req):
         for rule_attr in rc.attrib.keys():
             curr_val_of_attribute = req.readAttr[1][rule_attr].value
             val_to_match_against = rc.attrib[rule_attr]
-            if curr_val_of_attribute == val_to_match_against:
+            if Match(curr_val_of_attribute, val_to_match_against):
                 count_match_sub_attr += 1
         if count_match_sub_attr != len(rc.attrib.keys()):
             result = Result(decision,updatedObj,updates)
@@ -95,7 +107,7 @@ def evaluate(rule, req):
         for rule_attr in sc.attrib.keys():
             curr_val_of_attribute = req.readAttr[2][rule_attr].value
             val_to_match_against = sc.attrib[rule_attr]
-            if curr_val_of_attribute == val_to_match_against:
+            if Match(curr_val_of_attribute, val_to_match_against):
                 count_match_sub_attr += 1
 
         if count_match_sub_attr != len(sc.attrib.keys()):
