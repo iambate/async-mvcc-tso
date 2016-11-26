@@ -25,7 +25,10 @@ def apply_Operation(old_val_of_attr,operation):
     return old_val_of_attr
 def Match(curr_val_of_attribute, val_to_match_against):
     if val_to_match_against == 'empty':
-        val_to_match_against == None
+        val_to_match_against == ""
+    if val_to_match_against[0] == '<' or val_to_match_against[0] == '>' or val_to_match_against[0] == '=':
+        ans = eval(str(curr_val_of_attribute) + str(val_to_match_against) )
+        return ans
     if curr_val_of_attribute == val_to_match_against:
         return True
     return False
