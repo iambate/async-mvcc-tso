@@ -26,7 +26,7 @@ def apply_Operation(old_val_of_attr,operation):
 def Match(curr_val_of_attribute, val_to_match_against):
     if val_to_match_against == 'empty':
         val_to_match_against = ""
-    if val_to_match_against[0] == '<' or val_to_match_against[0] == '>' or val_to_match_against[0] == '=':
+    elif val_to_match_against[0] == '<' or val_to_match_against[0] == '>' or val_to_match_against[0] == '=':
         ans = eval(str(curr_val_of_attribute) + str(val_to_match_against))
         return ans
     if curr_val_of_attribute == val_to_match_against:
@@ -60,7 +60,7 @@ def evaluate(rule, req):
             count_match_sub_attr += 1
     if count_match_sub_attr != len(sc.attrib.keys()):
         result = Result(decision,updatedObj,updates)
-        return Result
+        return result
 
     count_match_sub_attr = 0
     for rule_attr in rc.attrib.keys():
@@ -71,13 +71,13 @@ def evaluate(rule, req):
 
     if count_match_sub_attr != len(rc.attrib.keys()):
         result = Result(decision,updatedObj,updates)
-        return Result
+        return result
     
     sUpdate=rule.find('subjectUpdate')
     rUpdate=rule.find('resourceUpdate')
     if sUpdate == None and rUpdate == None:
         result = Result('permit',updatedObj,updates)
-        return Result
+        return result
     if sUpdate != None:
         updatedObj = req.subject
         for attribute_to_update in sUpdate.attrib:
