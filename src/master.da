@@ -55,10 +55,10 @@ def main():
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
     workers = new(worker.Worker, num = 6)
-    dbs = new(db.DB, num = 1)
+    dbs = new(db.DB, num = 6)
 
     setup(dbs, (requestNo,))
-    setup(workers, (list(coords), dbs, requestNo))
+    setup(workers, (list(coords), list(dbs), requestNo))
     setup(coords, (list(coords), list(workers), requestNo))
     setup(clients, (list(coords), requestNo))
 

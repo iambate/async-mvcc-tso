@@ -161,14 +161,14 @@ def getAttrNeeded(rule, type):
     return attrs
 
 class Worker(process):
-    def setup(coords_list, db, requestNo):
+    def setup(coords_list, dbs_list, requestNo):
         self.q = queue.Queue()
 
-    def readFromDB(R, objs, attr_from_db, rule_no):
+    def readFromDB(R, objs, attr_from_db, rule_no, db_no):
         for i in [1, 2]:
             unique_db_req = str(R.id) + str(rule_no) + str(i)
             output("Sending Read to Db: ", unique_db_req)
-            send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.db)
+            send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[db_no])
             await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
             output("Received response from Db: ", unique_db_req)
             for attr in newR.keys():
@@ -181,6 +181,7 @@ class Worker(process):
         output("Proceeding to Work: ", R)
         p= work['fromProcess']
         coords_list = work['coords_list']
+        worker_no = work['worker_no']
         o1 = common.obj(R, 1)
         o2 = common.obj(R, 2)
         rule_no = 0
@@ -199,10 +200,10 @@ class Worker(process):
                     if attrs in R.cachedUpdates[i] and R.cachedUpdates[i][attrs].value != None:
                         if attrs not in R.readAttr[i]:
                             R.readAttr[i][attrs] = {}
-                        R.readAttr[i][attr] = cachedUpdates[n][attrs]
+                        R.readAttr[i][attr] = R.cachedUpdates[n][attrs]
                     else:
                         attr_from_db[i] += [attrs]
-            R = readFromDB(R, [o1,o2], attr_from_db, rule_no)
+            R = readFromDB(R, [o1,o2], attr_from_db, rule_no, worker_no)
             result = evaluate(rule, R)
             if result.decision == 'permit' or result.decision == 'deny':
                             break
@@ -248,4 +249,5 @@ class Worker(process):
         work['request'] = R
         work['fromProcess'] = p
         work['coords_list'] = self.coords_list
+        work['worker_no'] = self.coords_list.index(p)
         self.q.put(work)
