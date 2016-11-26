@@ -43,98 +43,54 @@ def evaluate(rule, req):
     rc=rule.find('resourceCondition')
     act=rule.find('action')
     if req.subject == common.obj(req,1):
-        '''
-        readAttr[1] refers to all subject attributes
-        '''
-        count_match_sub_attr = 0
-        for rule_attr in sc.attrib.keys():
-            curr_val_of_attribute = req.readAttr[1][rule_attr].value
-            val_to_match_against = sc.attrib[rule_attr]
-            if Match(curr_val_of_attribute , val_to_match_against):
-                count_match_sub_attr += 1
-        if count_match_sub_attr != len(sc.attrib.keys()):
-            result = Result(decision,updatedObj,updates)
-            return Result
-
-        count_match_sub_attr = 0
-        for rule_attr in rc.attrib.keys():
-            curr_val_of_attribute = req.readAttr[2][rule_attr].value
-            val_to_match_against = rc.attrib[rule_attr]
-            if Match(curr_val_of_attribute, val_to_match_against):
-                count_match_sub_attr += 1
-
-        if count_match_sub_attr != len(rc.attrib.keys()):
-            result = Result(decision,updatedObj,updates)
-            return Result
-        
-        sUpdate=rule.find('subjectUpdate')
-        rUpdate=rule.find('resourceUpdate')
-        if sUpdate == None and rUpdate == None:
-            result = Result('permit',updatedObj,updates)
-            return Result
-        if sUpdate != None:
-            updatedObj = req.subject
-            for attribute_to_update in sUpdate.attrib:
-                old_val_of_attr = req.readAttr[1][attribute_to_update].value
-                operation = sUpdate.attrib[attribute_to_update]
-                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
-            result = Result('permit',updatedObj,updates)
-            return result
-        else:
-            updatedObj = req.resource
-            for attribute_to_update in rUpdate.attrib:
-                old_val_of_attr = req.readAttr[2][attribute_to_update].value
-                operation = rUpdate.attrib[attribute_to_update]
-                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
-            result = Result('permit',updatedObj,updates)
-            return result
-        
+        sub_index = 1
+        res_index = 2
     else:
-        '''
-        readAttr[1] refers to all resource attributes
-        '''
-        count_match_sub_attr = 0
-        for rule_attr in rc.attrib.keys():
-            curr_val_of_attribute = req.readAttr[1][rule_attr].value
-            val_to_match_against = rc.attrib[rule_attr]
-            if Match(curr_val_of_attribute, val_to_match_against):
-                count_match_sub_attr += 1
-        if count_match_sub_attr != len(rc.attrib.keys()):
-            result = Result(decision,updatedObj,updates)
-            return Result
+        sub_index = 2
+        res_index = 1
+    
+    count_match_sub_attr = 0
+    for rule_attr in sc.attrib.keys():
+        curr_val_of_attribute = req.readAttr[sub_index][rule_attr].value
+        val_to_match_against = sc.attrib[rule_attr]
+        if Match(curr_val_of_attribute, val_to_match_against):
+            count_match_sub_attr += 1
+    if count_match_sub_attr != len(sc.attrib.keys()):
+        result = Result(decision,updatedObj,updates)
+        return Result
 
-        count_match_sub_attr = 0
-        for rule_attr in sc.attrib.keys():
-            curr_val_of_attribute = req.readAttr[2][rule_attr].value
-            val_to_match_against = sc.attrib[rule_attr]
-            if Match(curr_val_of_attribute, val_to_match_against):
-                count_match_sub_attr += 1
+    count_match_sub_attr = 0
+    for rule_attr in rc.attrib.keys():
+        curr_val_of_attribute = req.readAttr[res_index][rule_attr].value
+        val_to_match_against = rc.attrib[rule_attr]
+        if Match(curr_val_of_attribute, val_to_match_against):
+            count_match_sub_attr += 1
 
-        if count_match_sub_attr != len(sc.attrib.keys()):
-            result = Result(decision,updatedObj,updates)
-            return Result
-        
-        sUpdate=rule.find('subjectUpdate')
-        rUpdate=rule.find('resourceUpdate')
-        if sUpdate == None and rUpdate == None:
-            result = Result('permit',updatedObj,updates)
-            return Result
-        if sUpdate != None:
-            updatedObj = req.subject
-            for attribute_to_update in sUpdate.attrib:
-                old_val_of_attr = req.readAttr[2][attribute_to_update].value
-                operation = sUpdate.attrib[attribute_to_update]
-                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
-            result = Result('permit',updatedObj,updates)
-            return result
-        else:
-            updatedObj = req.resource
-            for attribute_to_update in rUpdate.attrib:
-                old_val_of_attr = req.readAttr[1][attribute_to_update].value
-                operation = rUpdate.attrib[attribute_to_update]
-                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
-            result = Result('permit',updatedObj,updates)
-            return result
+    if count_match_sub_attr != len(rc.attrib.keys()):
+        result = Result(decision,updatedObj,updates)
+        return Result
+    
+    sUpdate=rule.find('subjectUpdate')
+    rUpdate=rule.find('resourceUpdate')
+    if sUpdate == None and rUpdate == None:
+        result = Result('permit',updatedObj,updates)
+        return Result
+    if sUpdate != None:
+        updatedObj = req.subject
+        for attribute_to_update in sUpdate.attrib:
+            old_val_of_attr = req.readAttr[sub_index][attribute_to_update].value
+            operation = sUpdate.attrib[attribute_to_update]
+            updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+        result = Result('permit',updatedObj,updates)
+        return result
+    else:
+        updatedObj = req.resource
+        for attribute_to_update in rUpdate.attrib:
+            old_val_of_attr = req.readAttr[res_index][attribute_to_update].value
+            operation = rUpdate.attrib[attribute_to_update]
+            updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+        result = Result('permit',updatedObj,updates)
+        return result
     
 
 def staticAnalysis(req):
