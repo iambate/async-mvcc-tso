@@ -15,6 +15,7 @@ class Result:
 
 def apply_Operation(old_val_of_attr,operation):
     #do processing
+    
     return old_val_of_attr
 
 def evaluate(rule, req):
@@ -121,70 +122,7 @@ def evaluate(rule, req):
                 updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
             result = Result('permit',updatedObj,updates)
             return result
-    '''
-
-     tree = ET.parse('policy-example.xml')
-        root = tree.getroot()
-        policy = False
-        subject_update = {}
-        resource_update = {}
-
-        for rule in root.iter('rule'):
-            match = 0
-            sc=rule.find('subjectCondition')
-            if len(sc.attrib) == len(temp_db["subject"]):
-                for key in sc.attrib:
-                    if sc.attrib[key][0] == '>' or sc.attrib[key][0] == '<' or sc.attrib[key][0] == '=':
-                        ans = eval(str(temp_db["subject"][key])+str(sc.attrib[key]))
-                        if ans == True:
-                            match = match + 1
-                    elif temp_db["subject"][key] == sc.attrib[key]:
-                        match = match + 1
-                
-            rc=rule.find('resourceCondition')
-            if len(rc.attrib) == len(temp_db["resource"]):
-                for key in rc.attrib:
-                    if rc.attrib[key][0] == '>' or rc.attrib[key][0] == '<' or rc.attrib[key][0] == '=':
-                        ans = eval(str(temp_db["resource"][key])+str(rc.attrib[key]))
-                        if ans == True:
-                            match = match + 1
-                    elif temp_db["resource"][key] == rc.attrib[key]:
-                        match = match + 1
-                
-            act=rule.find('action')
-            for key in act.attrib:
-                    if temp_db["action"][key] == act.attrib[key]:
-                        match = match + 1
-                
-            if match == len(sc.attrib) + len(rc.attrib) + len(act.attrib):
-                su=rule.find('subjectUpdate')
-                if su != None:
-                    for key in su.attrib:
-                        if su.attrib[key][0] == '+' or su.attrib[key][0] == '-' or su.attrib[key][0] == '*' or su.attrib[key][0] == '/':
-                            subject_update[key] = eval(str(temp_db["subject"][key])+str(su.attrib[key]))
-                        else:
-                            subject_update[key] = su.attrib[key]
-
-                ru=rule.find('resourceUpdate')
-                if ru != None:
-                    for key in ru.attrib:
-                        if ru.attrib[key][0] == '+' or ru.attrib[key][0] == '-' or ru.attrib[key][0] == '*' or ru.attrib[key][0] == '/' or ru.attrib[key][0] == '=':
-                            if ru.attrib[key][0] == '+':
-                                resource_update[key] = int(temp_db["resource"][key]) + 1
-                            elif ru.attrib[key][0] == '-':
-                                resource_update[key] = int(temp_db["resource"][key]) - 1
-                            
-                        else:
-                            resource_update[key] = ru.attrib[key]
-                    
-                policy = True
-                break
-        
-        if policy == False:
-            return (False,{},{})
-        else:
-            return (True,subject_update,resource_update)
-    '''
+    
 
 def staticAnalysis(req):
     tree = ET.parse(THIS_DIR + '/../policy-example.xml')
