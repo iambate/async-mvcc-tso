@@ -51,18 +51,20 @@ class Coord(process):
         x = common.obj(req,n)
         if n == 1:
             req.ts = common.now()
-        tobeRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
-        '''
-        await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead)
-        '''
-        while True:
-            count_empty = 0
-            for attr in tobeRead:
-                if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
-                    count_empty += 1
+            tobeRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
+            '''
+            await(latestVersionBefore(x,attr,req.ts).pendingMightWrite.empty() for attr in tobeRead)
+            '''
+            self.logger.info("Req waiting start: %s", req)
+            while True:
+                count_empty = 0
+                for attr in tobeRead:
+                    if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
+                        count_empty += 1
 
-            if count_empty == len(tobeRead):
-                break
+                if count_empty == len(tobeRead):
+                    break
+            self.logger.info("Req waiting stop: %s", req)
 
         if (len(common.mightWriteObj(req)) == 0): #its a read only req
             for attr in common.defReadAttr(x, req):
@@ -121,7 +123,7 @@ class Coord(process):
                 latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
             start_timer = common.now()
-            timeout = random.random()
+            timeout = 2 * random.random()
 
             '''
             await((forall attr in req.updates.keys():
@@ -148,6 +150,7 @@ class Coord(process):
             
             if timed_out == True:
                 self.logger.debug("Exiting CACHE: %s and Results: %s", self._CACHE, req)
+                self.logger.info("Restart Request due to timeout %s: ", req)
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
                 return
@@ -178,22 +181,20 @@ class Coord(process):
                 send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
             else:
-                self.logger.info("Restart Request %s: ", str(req))
+                self.logger.info("Restart Request due to second conflict %s: ", req)
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
         else:
-            self.logger.info("Restart Request %s: ", str(req))
+            self.logger.info("Restart Request due to first conflict %s: ", req)
             send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
             send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
         self.logger.debug("Exiting CACHE: %s and Results: %s", self._CACHE, req)
 
 
     def receive(msg=('Restart', req, n)):
-        req.ts = common.now()
         x = common.obj(req, n)
         
         for attr in list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
-            self.logger.debug("Restart request: %s", latestVersionBefore(x, attr, req.ts))
             latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
 
 

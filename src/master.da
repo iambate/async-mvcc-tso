@@ -36,7 +36,6 @@ class Client(process):
                 req.objects.append(obj2)
                 req.id = counter
                 counter += 1
-                time.sleep(1)
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
 
