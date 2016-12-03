@@ -12,7 +12,7 @@ class Result:
     def __init__(self, decision = 'deny', updatedObj = None, updates = []):
         self.decision = decision        # deny or permit
         self.updatedObj = updatedObj    # object that will be updated
-        self.updates = updates          # [<attr1, value1>, <attr2, value2>, ..]
+        self.updates = updates          # {attr1: value1, attr2: value2, ..]
 
 def apply_Operation(old_val_of_attr,operation):
     if operation == '++':
@@ -185,12 +185,12 @@ class Worker(process):
             R.decision = 'deny'
         else:
             R.decision = result.decision
-        self.logger.debug("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
         if result.updatedObj == None:
             # Read Request
             R.updatedObj = -1
             R.rdOnlyObj = -1
-            R.updates = []
+            R.updates = dict()
+            self.logger.debug("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
             send(('Response', R), to=R.client)
             self.logger.debug("Read Only Request. Sending request to client: %s", R)
             for i in [1, 2]:
@@ -204,6 +204,7 @@ class Worker(process):
                 R.updatedObj = 2
                 R.rdOnlyObj = 1
             R.updates = result.updates
+            self.logger.debug("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
             send(('Result', R), to=common.coord(common.obj(R, R.updatedObj), coords_list))
 
     def run():

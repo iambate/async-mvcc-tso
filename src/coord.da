@@ -4,6 +4,7 @@ import logging
 import random
 import os
 import sys
+import time
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 from config import master_config
@@ -44,6 +45,7 @@ class Coord(process):
         self._CACHE = CACHE
         self.sessionID = common.now()
         self.logger = logging.getLogger(__name__)
+        sys.setrecursionlimit(10000)
 
     def run():
         await(received("Done"))
@@ -59,22 +61,35 @@ class Coord(process):
                     self.logger.debug(k.rts," ",k.pendingMightRead)
                     self.logger.debug("\n")
 
+    def check_if_empty(tobeRead):
+        count_empty = 0
+        for attr in tobeRead:
+            if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
+                count_empty += 1
+
+        if count_empty == len(tobeRead):
+            return True
+        return False
+
     def receive(msg=('Request', req, n), from_=p):
         x = common.obj(req,n)
         if n == 1:
             req.ts = common.now()
-            tobeRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
+        tobeRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
+        self.logger.debug("Start waiting before proceeding to work: %s", str(req))
+        await(check_if_empty(tobeRead) == True)
+        '''
+        while True:
+            count_empty = 0
+            for attr in tobeRead:
+                if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
+                    count_empty += 1
 
-            self.logger.info("Req waiting start: %s", req)
-            while True:
-                count_empty = 0
-                for attr in tobeRead:
-                    if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
-                        count_empty += 1
+            if count_empty == len(tobeRead):
+                break
+        '''
+        self.logger.debug("Stop waiting before proceeding to work: %s", str(req))
 
-                if count_empty == len(tobeRead):
-                    break
-            self.logger.info("Req waiting stop: %s", req)
 
         if (len(common.mightWriteObj(req)) == 0): #its a read only req
             for attr in common.defReadAttr(x, req):
@@ -82,9 +97,13 @@ class Coord(process):
         else:
             for attr in common.defReadAttr(x,req):
                 latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
+        '''
         if req.restarted == True:
-            for attr in common.mightWriteAttr(x, req):
-                latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
+            self.logger.info("Returning restarted True: %s", req)
+            return
+        '''
+        for attr in common.mightWriteAttr(x, req):
+            latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
         for attr in common.mightReadAttr(x, req):
             latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
@@ -176,7 +195,7 @@ class Coord(process):
                         count_empty += 1
                 if count_empty == len(req.updates):
                     break
-            
+ 
             if timed_out == True:
                 self.logger.debug("Exiting CACHE: %s and Results: %s", self._CACHE, req)
                 self.logger.info("Restart Request due to timeout %s: ", req)
