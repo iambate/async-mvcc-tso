@@ -36,17 +36,6 @@ def cachedUpdates(x, req):
         #cu = {attr1:<version> ,attr2:<version>,..}
     return cu
 
-def print_cache(printstr,req,cache):
-    output(printstr," ",req.id," ",req.ts,"\n")
-    for i in cache:
-        output("\n",i,":","\n")
-        for j in cache[i]:
-            output("\n",j,":")
-            for k in cache[i][j]:
-                output(cache[i][j][k].rts," ",cache[i][j][k].pendingMightRead)
-                output("\n")
-
-
 
 
 class Coord(process):
@@ -58,6 +47,17 @@ class Coord(process):
 
     def run():
         await(received("Done"))
+
+    def print_cache(printstr,req):
+        #global CACHE
+        output(printstr," ",req.id," ",req.ts,"\n")
+        for i in self._CACHE:
+            self.logger.debug("\n",i,":","\n")
+            for j in self._CACHE[i]:
+                self.logger.debug("\n",j,":")
+                for k in self._CACHE[i][j]:
+                    self.logger.debug(k.rts," ",k.pendingMightRead)
+                    self.logger.debug("\n")
 
     def receive(msg=('Request', req, n), from_=p):
         x = common.obj(req,n)
@@ -81,7 +81,6 @@ class Coord(process):
         if (len(common.mightWriteObj(req)) == 0): #its a read only req
             for attr in common.defReadAttr(x, req):
                 latestVersionBefore(x, attr, req.ts).rts = req.ts
-                print_cache("ro req, updating rts for all its defreadattr",req,self._CACHE)
         else:
             for attr in common.defReadAttr(x,req):
                 latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
@@ -91,7 +90,17 @@ class Coord(process):
 
         for attr in common.mightReadAttr(x, req):
             latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
+        output("xxxx STATUS OF cache AFTER 1ST ARRIVAL OF xxxx",req.id,req.ts)
+        #output("pmr of latestversionbefore")
+        for i in self._CACHE:
+            output(str(i),":")
+            for j in self._CACHE[i]:
+                output(j,":")
+                for k in self._CACHE[i][j]:
+                    output(str(k.rts)," ",k.pendingMightRead,k.pendingMightWrite)
+        output("xxxxxxxxx end xxxxxxx")
 
+        #print_cache("ro req, updating rts or pendingmightreads for all its defreadattr",req)
         req.cachedUpdates[n] = cachedUpdates(x, req)
         if n == 1:
             send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
@@ -113,7 +122,17 @@ class Coord(process):
             if req.id in v.pendingMightRead:
                 self.logger.debug("ReadAttr mightWrite :%s", v)
                 v.pendingMightRead.remove(req.id)
-        print_cache("req evaluated, removing it from pendingmightread of mightread/write attr",req,self._CACHE)
+
+        output("xxxx UPDATING DATA STRUCTS AFTER REQ COMPLETION OF xxxx",req.id,req.ts)
+        #output("pmr of latestversionbefore")
+        for i in self._CACHE:
+            output(str(i),":")
+            for j in self._CACHE[i]:
+                output(j,":")
+                for k in self._CACHE[i][j]:
+                    output(str(k.rts)," ",k.pendingMightRead,k.pendingMightWrite)
+        output("xxxxxxxxx end xxxxxxx")
+        #print_cache("req evaluated, removing it from pendingmightread of mightread/write attr",req)
         self.logger.debug("Exiting received a ReadAttr request for object: %d, Request: "+ str(req), i)
 
     def checkForConflicts(x, req):
@@ -186,11 +205,19 @@ class Coord(process):
                     # Verify Again
                     if req.id in v.pendingMightRead:
                         v.pendingMightRead.remove(req.id)
-                        v.rts = req.ts
+                        #v.rts = req.ts
                     if attr in req.readAttr[req.updatedObj]:
                         v.rts = req.ts
-
-                print_cache("req evaluated without conflicts,updating rts of its read attrs,",req,self._CACHE)
+                output("xxxx UPDATED READATTR RTS,REMOVED FROM PENDINGMIGHTREAD xxxx",req.id,req.ts)
+                #output("pmr of latestversionbefore")
+                for i in self._CACHE:
+                    output(str(i),":")
+                    for j in self._CACHE[i]:
+                        output(j,":")
+                        for k in self._CACHE[i][j]:
+                            output(str(k.rts)," ",k.pendingMightRead,k.pendingMightWrite)
+                output("xxxxxxxxx end new xxxxxxx")
+                #print_cache("req evaluated without conflicts,updating rts of its read attrs,",req)
                 send(('Response', req), to=req.client)
                 send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
