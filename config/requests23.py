@@ -9,7 +9,7 @@ requests = {
                 "wait"  : 6
             }
         ,
-        2:
+        3:
             {
                 "subjid": 1,
                 "subjtype": "employee",
@@ -18,7 +18,7 @@ requests = {
                 "action": "read"
             }
         ,
-        3:
+        2:
             {
                 "subjid": 1,
                 "subjtype": "employee",
