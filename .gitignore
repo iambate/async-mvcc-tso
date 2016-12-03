@@ -2,5 +2,5 @@ __pycache__/
 src/*.py
 src/__pycache__/
 config/__pycache__/
-log/*.log
+log/
 .*.swp

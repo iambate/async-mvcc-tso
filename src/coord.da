@@ -39,7 +39,7 @@ def cachedUpdates(x, req):
 class Coord(process):
     def setup(coords_list, workers_list, dbs_list, requestNo):
         self.sessionID = common.now()
-        self.logger = logging.getLogger("master")
+        self.logger = logging.getLogger(__name__)
 
     def run():
         await(received("Done"))
@@ -146,7 +146,7 @@ class Coord(process):
 
 
             conflict = checkForConflicts(x, req)
-            
+
             if not conflict:
                 send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])
                 for attr in req.updates.keys():
@@ -168,9 +168,11 @@ class Coord(process):
                 send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
             else:
+                self.logger.info("Restart Request %s: ", str(req))
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
         else:
+            self.logger.info("Restart Request %s: ", str(req))
             send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
             send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
 

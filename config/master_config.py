@@ -16,6 +16,7 @@ from config import database3
 from config import requests5
 
 from config import requests21
+from config import requests22
 
 class conf:
     def __init__(self):
@@ -43,7 +44,7 @@ c2 = conf()
 c2.database = database2.attribute_db
 c2.minDBlatency = 1
 c2.maxDBlatency = 5
-c2.requests = requests21.requests
+c2.requests = requests22.requests
 cnfg[2]=c2
 
 # Configuration Three

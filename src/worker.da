@@ -33,68 +33,6 @@ def Match(curr_val_of_attribute, val_to_match_against):
         return True
     return False
 
-def evaluate(rule, req):
-    decision = "deny"
-    updatedObj = None
-    updates = dict()
-    '''
-    req: readAttr[1] = {1_attr1:ver, 1_attr2:ver,....} for objects[1]
-
-    '''
-    sc = rule.find('subjectCondition')
-    rc=rule.find('resourceCondition')
-    act=rule.find('action')
-    if req.subject == common.obj(req,1):
-        sub_index = 1
-        res_index = 2
-    else:
-        sub_index = 2
-        res_index = 1
-    
-    count_match_sub_attr = 0
-    for rule_attr in sc.attrib.keys():
-        print(req.readAttr)
-        curr_val_of_attribute = req.readAttr[sub_index][rule_attr].value
-        val_to_match_against = sc.attrib[rule_attr]
-        if Match(curr_val_of_attribute, val_to_match_against):
-            count_match_sub_attr += 1
-    if count_match_sub_attr != len(sc.attrib.keys()):
-        result = Result(decision,updatedObj,updates)
-        return result
-
-    count_match_sub_attr = 0
-    for rule_attr in rc.attrib.keys():
-        curr_val_of_attribute = req.readAttr[res_index][rule_attr].value
-        val_to_match_against = rc.attrib[rule_attr]
-        if Match(curr_val_of_attribute, val_to_match_against):
-            count_match_sub_attr += 1
-
-    if count_match_sub_attr != len(rc.attrib.keys()):
-        result = Result(decision,updatedObj,updates)
-        return result
-    
-    sUpdate=rule.find('subjectUpdate')
-    rUpdate=rule.find('resourceUpdate')
-    if sUpdate == None and rUpdate == None:
-        result = Result('permit',updatedObj,updates)
-        return result
-    if sUpdate != None:
-        updatedObj = req.subject
-        for attribute_to_update in sUpdate.attrib:
-            old_val_of_attr = req.readAttr[sub_index][attribute_to_update].value
-            operation = sUpdate.attrib[attribute_to_update]
-            updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
-        result = Result('permit',updatedObj,updates)
-        return result
-    else:
-        updatedObj = req.resource
-        for attribute_to_update in rUpdate.attrib:
-            old_val_of_attr = req.readAttr[res_index][attribute_to_update].value
-            operation = rUpdate.attrib[attribute_to_update]
-            updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
-        result = Result('permit',updatedObj,updates)
-        return result
-    
 
 def staticAnalysis(req):
     tree = ET.parse(THIS_DIR + '/../policy-example.xml')
@@ -134,9 +72,71 @@ def getAttrNeeded(rule, type):
 
 class Worker(process):
     def setup(coords_list, dbs_list, requestNo):
-        self.logger = logging.getLogger("master")
+        self.logger = logging.getLogger(__name__)
         self.q = queue.Queue()
 
+    def evaluate(rule, req):
+        decision = "deny"
+        updatedObj = None
+        updates = dict()
+        '''
+        req: readAttr[1] = {1_attr1:ver, 1_attr2:ver,....} for objects[1]
+
+        '''
+        sc = rule.find('subjectCondition')
+        rc=rule.find('resourceCondition')
+        act=rule.find('action')
+        if req.subject == common.obj(req,1):
+            sub_index = 1
+            res_index = 2
+        else:
+            sub_index = 2
+            res_index = 1
+        
+        count_match_sub_attr = 0
+        for rule_attr in sc.attrib.keys():
+            self.logger.debug(req.readAttr)
+            curr_val_of_attribute = req.readAttr[sub_index][rule_attr].value
+            val_to_match_against = sc.attrib[rule_attr]
+            if Match(curr_val_of_attribute, val_to_match_against):
+                count_match_sub_attr += 1
+        if count_match_sub_attr != len(sc.attrib.keys()):
+            result = Result(decision,updatedObj,updates)
+            return result
+
+        count_match_sub_attr = 0
+        for rule_attr in rc.attrib.keys():
+            curr_val_of_attribute = req.readAttr[res_index][rule_attr].value
+            val_to_match_against = rc.attrib[rule_attr]
+            if Match(curr_val_of_attribute, val_to_match_against):
+                count_match_sub_attr += 1
+
+        if count_match_sub_attr != len(rc.attrib.keys()):
+            result = Result(decision,updatedObj,updates)
+            return result
+        
+        sUpdate=rule.find('subjectUpdate')
+        rUpdate=rule.find('resourceUpdate')
+        if sUpdate == None and rUpdate == None:
+            result = Result('permit',updatedObj,updates)
+            return result
+        if sUpdate != None:
+            updatedObj = req.subject
+            for attribute_to_update in sUpdate.attrib:
+                old_val_of_attr = req.readAttr[sub_index][attribute_to_update].value
+                operation = sUpdate.attrib[attribute_to_update]
+                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+            result = Result('permit',updatedObj,updates)
+            return result
+        else:
+            updatedObj = req.resource
+            for attribute_to_update in rUpdate.attrib:
+                old_val_of_attr = req.readAttr[res_index][attribute_to_update].value
+                operation = rUpdate.attrib[attribute_to_update]
+                updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation) #returns updated value
+            result = Result('permit',updatedObj,updates)
+            return result
+        
     def readFromDB(R, objs, attr_from_db, rule_no, db_no):
         for i in [1, 2]:
             unique_db_req = str(R.id) + str(rule_no) + str(i)
@@ -177,7 +177,7 @@ class Worker(process):
                     else:
                         attr_from_db[i] += [attrs]
             R = readFromDB(R, [o1,o2], attr_from_db, rule_no, worker_no)
-            result = evaluate(rule, R)
+            result = self.evaluate(rule, R)
             if result.decision == 'permit' or result.decision == 'deny':
                             break
             rule_no += 1
@@ -185,7 +185,7 @@ class Worker(process):
             R.decision = 'deny'
         else:
             R.decision = result.decision
-
+        self.logger.debug("Result after evaluation: %s", str(R))
         if result.updatedObj == None:
             # Read Request
             R.updatedObj = -1

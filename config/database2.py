@@ -3,14 +3,14 @@ attribute_db = {
             {
                 "name": "Tom",
                 "type" : "employee",
-                "history": "empty"
+                "history": ""
             }
         ,
         2:
             {
                 "name": "Jack",
                 "type": "employee",
-                "history": "empty"
+                "history": ""
             }
         ,
         257:

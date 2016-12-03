@@ -18,6 +18,7 @@ class Client(process):
 
     def run():
         requests = conf.cnfg[requestNo].requests
+        counter = 0
         if requests:
             for i in requests:
                 subj = common.Object(requests[i]["subjid"], requests[i]["subjtype"])
@@ -32,11 +33,13 @@ class Client(process):
                     obj2 = req.subject
                 req.objects.append(obj1)
                 req.objects.append(obj2)
+                req.id = counter
+                counter += 1
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
 
     def receive(msg=('Response', response)):
-        self.logger.info(str(response))
+        self.logger.info("Response received by Client: %s",str(response))
 
 
 def main():
@@ -47,13 +50,14 @@ def main():
         exit(1)
     requestNo = int(sys.argv[1])
     logfile = THIS_DIR + "/../log/request_"+ str(requestNo) + ".log"
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    handler = logging.FileHandler(logfile)
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    for name in ["coord", "master", "db", "worker"]:
+        logger = logging.getLogger(name)
+        logger.setLevel(logging.DEBUG)
+        handler = logging.FileHandler(logfile)
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
