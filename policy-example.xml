@@ -12,12 +12,12 @@
 
   <rule name="access bank A again">
     <subjectCondition type="employee" history="BankA"></subjectCondition>
-    <resourceCondition type="bank" name="BankA" xys="cvx"></resourceCondition>
+    <resourceCondition type="bank" name="BankA"></resourceCondition>
     <action name="read"></action>
   </rule>
 
   <rule name="access bank B first time">
-    <subjectCondition type="employee" history="empty" tyr="hasbdhas"></subjectCondition>
+    <subjectCondition type="employee" history="empty"></subjectCondition>
     <resourceCondition type="bank" name="BankB"></resourceCondition>
     <action name="read"></action>
     <subjectUpdate history="BankB"></subjectUpdate>

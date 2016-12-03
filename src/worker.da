@@ -76,7 +76,7 @@ class Worker(process):
         self.q = queue.Queue()
 
     def evaluate(rule, req):
-        decision = "deny"
+        decision = None
         updatedObj = None
         updates = dict()
         '''
@@ -173,7 +173,7 @@ class Worker(process):
                     if attrs in R.cachedUpdates[i] and R.cachedUpdates[i][attrs].value != None:
                         if attrs not in R.readAttr[i]:
                             R.readAttr[i][attrs] = {}
-                        R.readAttr[i][attr] = R.cachedUpdates[n][attrs]
+                        R.readAttr[i][attrs] = R.cachedUpdates[i][attrs]
                     else:
                         attr_from_db[i] += [attrs]
             R = readFromDB(R, [o1,o2], attr_from_db, rule_no, worker_no)
@@ -185,7 +185,7 @@ class Worker(process):
             R.decision = 'deny'
         else:
             R.decision = result.decision
-        self.logger.debug("Result after evaluation: %s", str(R))
+        self.logger.debug("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
         if result.updatedObj == None:
             # Read Request
             R.updatedObj = -1

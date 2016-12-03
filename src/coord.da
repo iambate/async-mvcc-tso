@@ -12,17 +12,18 @@ common = import_da('common')
 CACHE = {}
 
 def latestVersionBefore(x, attr, ts):
+    global CACHE
     prevI = []
-    if x in CACHE and attr in CACHE[x]:
-        prevI = commonpy.max_version((list(i for i in CACHE[x][attr] if i.wts < ts)))
+    if x.id in CACHE and attr in CACHE[x.id]:
+        prevI = commonpy.max_version((list(i for i in CACHE[x.id][attr] if i.wts < ts)))
 
     if prevI == []:
-        if x not in CACHE:
-            CACHE[x] = {}
-        if attr not in CACHE[x]:
-            CACHE[x][attr] = []
-        CACHE[x][attr].insert(0, common.Versions())
-        prevI = CACHE[x][attr][0]
+        if x.id not in CACHE:
+            CACHE[x.id] = {}
+        if attr not in CACHE[x.id]:
+            CACHE[x.id][attr] = []
+        CACHE[x.id][attr].insert(0, common.Versions())
+        prevI = CACHE[x.id][attr][0]
     return prevI
 
 
@@ -38,6 +39,8 @@ def cachedUpdates(x, req):
 
 class Coord(process):
     def setup(coords_list, workers_list, dbs_list, requestNo):
+        global CACHE
+        self._CACHE = CACHE
         self.sessionID = common.now()
         self.logger = logging.getLogger(__name__)
 
@@ -81,7 +84,7 @@ class Coord(process):
             send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list))])
 
     def receive(msg=('ReadAttr', req, i)):
-        self.logger.debug("received a ReadAttr request for object: %d, Request: "+ str(req), i)
+        self.logger.debug("Entering received a ReadAttr request for object: %d, Request: "+ str(req), i)
         x = common.obj(req, i)
         for attr in common.mightReadAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)
@@ -95,15 +98,19 @@ class Coord(process):
             if req.id in v.pendingMightRead:
                 self.logger.debug("ReadAttr mightWrite :%s", v)
                 v.pendingMightRead.remove(req.id)
+        self.logger.debug("Exiting received a ReadAttr request for object: %d, Request: "+ str(req), i)
 
     def checkForConflicts(x, req):
+        self.logger.debug("In checkForConflict: %s", (req))
         for attr in req.updates.keys():
             v = latestVersionBefore(x,attr,req.ts)
+            self.logger.debug("Version: %s", str(v))
             if v.rts > req.ts:
                 return True
         return False
 
     def receive(msg=('Result',req)):
+        self.logger.debug("Entering CACHE: %s and Results: %s", self._CACHE, req)
         if req.ts < self.sessionID:
             return
         x = common.obj(req,req.updatedObj)
@@ -140,6 +147,7 @@ class Coord(process):
                     break
             
             if timed_out == True:
+                self.logger.debug("Exiting CACHE: %s and Results: %s", self._CACHE, req)
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
                 return
@@ -151,7 +159,8 @@ class Coord(process):
                 send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])
                 for attr in req.updates.keys():
                     v = common.Versions(req.ts,req.ts,req.updates[attr])
-                    CACHE[x][attr].append(v)
+                    self._CACHE[x.id][attr].append(v)
+                self.logger.debug("Updating to CACHE in Result version: %s", str(v) )
 
                 AllAttrsRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
                 for attr in AllAttrsRead:
@@ -160,6 +169,7 @@ class Coord(process):
                     # Verify Again
                     if req.id in v.pendingMightRead:
                         v.pendingMightRead.remove(req.id)
+                        v.rts = req.ts
                     if attr in req.readAttr[req.updatedObj]:
                         v.rts = req.ts
 
@@ -175,10 +185,12 @@ class Coord(process):
             self.logger.info("Restart Request %s: ", str(req))
             send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
             send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
+        self.logger.debug("Exiting CACHE: %s and Results: %s", self._CACHE, req)
 
 
     def receive(msg=('Restart', req, n)):
-        x = obj(req, n)
+        req.ts = common.now()
+        x = common.obj(req, n)
         
         for attr in list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
             self.logger.debug("Restart request: %s", latestVersionBefore(x, attr, req.ts))

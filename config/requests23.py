@@ -9,15 +9,6 @@ requests = {
                 "wait"  : 6
             }
         ,
-        3:
-            {
-                "subjid": 1,
-                "subjtype": "employee",
-                "resid" : 257,
-                "restype": "bank",
-                "action": "read"
-            }
-        ,
         2:
             {
                 "subjid": 1,
@@ -26,5 +17,14 @@ requests = {
                 "restype": "bank",
                 "action": "read",
                 "wait"  : 1
+            }
+        ,
+        3:
+            {
+                "subjid": 1,
+                "subjtype": "employee",
+                "resid" : 257,
+                "restype": "bank",
+                "action": "read"
             }
 }
