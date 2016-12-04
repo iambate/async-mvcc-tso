@@ -133,6 +133,7 @@ class Coord(process):
         if n == 1:
             send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
         else:
+            output("SENDING TO WORKER:", req.cachedUpdates[n]["history"])
             send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list))])
 
     def receive(msg=('ReadAttr', req, i)):
@@ -262,6 +263,12 @@ class Coord(process):
             v = latestVersionBefore(x, attr, req.ts).pendingMightWrite
             if req.id in v:
                 v.remove(req.id)
+        req.readAttr[n] = {}
+        req.cachedUpdates[n] = []
         if n == 2:
+            req.updates = []
+            req.decision = None
+            req.updatedObj = -1
+            req.rdOnlyObj = -1
             req.restarted = True
             send(('Request', req, 1), to=common.coord(common.obj(req, 1), coords_list))

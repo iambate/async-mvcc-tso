@@ -95,7 +95,6 @@ class Worker(process):
         
         count_match_sub_attr = 0
         for rule_attr in sc.attrib.keys():
-            output(req.readAttr)
             curr_val_of_attribute = req.readAttr[sub_index][rule_attr].value
             val_to_match_against = sc.attrib[rule_attr]
             if Match(curr_val_of_attribute, val_to_match_against):
@@ -139,7 +138,7 @@ class Worker(process):
         
     def readFromDB(R, objs, attr_from_db, rule_no, db_no):
         for i in [1, 2]:
-            unique_db_req = str(R.id) + str(rule_no) + str(i)
+            unique_db_req = str(R.ts) + str(rule_no) + str(i)
             output("Sending Read to Db: %s", unique_db_req)
             send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[0])
             await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
@@ -170,12 +169,14 @@ class Worker(process):
             attr_from_db = {1:[], 2: []}
             for i in [1,2]:
                 for attrs in attr_list[i]:
-                    if attrs in R.cachedUpdates[i] and R.cachedUpdates[i][attrs].value != None:
+                    if attrs in R.cachedUpdates[i].keys() and R.cachedUpdates[i][attrs].value != None:
                         if attrs not in R.readAttr[i]:#gargi
                             R.readAttr[i][attrs] = {}
+                        output("PIGGYBACK from CACHE: ", attrs, R.cachedUpdates[i][attrs])
                         R.readAttr[i][attrs] = R.cachedUpdates[i][attrs]
                     else:
                         attr_from_db[i] += [attrs]
+                output("READ FROM DB: ", attr_from_db[i])
             R = readFromDB(R, [o1,o2], attr_from_db, rule_no, worker_no)
             result = self.evaluate(rule, R)
             if result.decision == 'permit' or result.decision == 'deny':
