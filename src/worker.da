@@ -210,13 +210,17 @@ class Worker(process):
             # updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation)
             if result.updatedObj == common.obj(R, 1):
                 R.updatedObj = 1
+                '''
                 for attr in result.updates.keys():
                     R.readAttr[1][attr] = result.updates[attr]
+                    '''
                 R.rdOnlyObj = 2
             else:
                 R.updatedObj = 2
+                '''
                 for attr in result.updates.keys():
                     R.readAttr[2][attr] = result.updates[attr]
+                    '''
                 R.rdOnlyObj = 1
             R.updates = result.updates
 
