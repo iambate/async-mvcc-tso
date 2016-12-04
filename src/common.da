@@ -84,9 +84,6 @@ def isSame(x,obj):
     return False
 
 def populateRequest(req):
-    '''
-    GARGI: ALSO PUT ATTRIBUTES THAT MIGHT BE WRITTEN TO IN OBJECT_MIGHTREADATTR
-    '''
     tree = ET.parse('policy-example.xml')
     root = tree.getroot()
     rules_match = 0

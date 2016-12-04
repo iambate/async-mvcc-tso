@@ -33,6 +33,8 @@ class DB(process):
     #updates are of format : {attr1:}
     def receive(msg=("UpdateDatabase",obj,updates,ts), from_=p): 
         for attr in updates:
+            if attr not in self.database[obj]:
+                self.database[obj][attr] = []
             self.database[obj][attr].append(common.Versions(wts=ts, value= updates[attr]))
         
 
@@ -58,5 +60,6 @@ class DB(process):
                     content+=","
         output(content)
         output("------------------------------------------------")
+        output("Database process exiting...")
         return True
 

@@ -245,3 +245,6 @@ class Worker(process):
         work['coords_list'] = self.coords_list
         work['worker_no'] = self.coords_list.index(p)
         self.q.put(work)
+
+    def receive(msg=("Done")):
+        output("Worker exiting...")

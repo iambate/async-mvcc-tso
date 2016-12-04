@@ -50,7 +50,7 @@ class Coord(process):
         sys.setrecursionlimit(10000)
 
     def run():
-        if await(received("Done")): output("Coordinator Received Done")
+        if await(received("Done")): output("Coordinator Exiting...")
         elif check_if_any_empty(): pass
 
     def print_cache(printstr,req):
