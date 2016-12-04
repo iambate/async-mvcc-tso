@@ -63,12 +63,14 @@ def getAttrNeeded(rule, type):
         sc_attribs = rule.find('subjectCondition').attrib.keys()
         _add_attrs(attrs, sc_attribs)
         sub_write=rule.find('subjectUpdate')
-        _add_attrs(attrs, sub_write)
+        if sub_write != None:
+            _add_attrs(attrs, sub_write.keys())
     else:
         rc_attribs = rule.find('resourceCondition').attrib.keys()
         _add_attrs(attrs, rc_attribs)
         res_write=rule.find('resourceUpdate')
-        _add_attrs(attrs, res_write)
+        if res_write != None:
+            _add_attrs(attrs, res_write.keys())
     return attrs
 
 class Worker(process):

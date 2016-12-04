@@ -61,7 +61,7 @@ def main():
 
     clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
-    workers = new(worker.Worker, num = 6)
+    workers = new(worker.Worker, num = 12)
     dbs = new(db.DB, num = 1)
 
     setup(dbs, (requestNo,))

@@ -133,8 +133,7 @@ class Coord(process):
         if n == 1:
             send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
         else:
-            output("SENDING TO WORKER:", req.cachedUpdates[n]["history"])
-            send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list))])
+            send(('Request',req),to=workers_list[common.hash(req.id, len(coords_list)) + req._id % 2])
 
     def receive(msg=('ReadAttr', req, i)):
         output("Entering received a ReadAttr request for object: %d, Request: "+ str(req), i)
