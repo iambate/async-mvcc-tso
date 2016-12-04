@@ -188,10 +188,7 @@ class Coord(process):
                 return True
         return False
     
-    def condition(start_timer,timeout,timed_out,x,req):
-        if common.now() - start_timer >= timeout:
-            timed_out = True
-            return True
+    def condition(x, req):
         count_empty = 0
         for attr in req.updates.keys():
             if len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 0 \
@@ -215,7 +212,6 @@ class Coord(process):
                 if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightWrite:
                     latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
-            start_timer = common.now()
             timeout = 2 * random.random()
 
             '''
@@ -227,8 +223,14 @@ class Coord(process):
                 
                     req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), (common.now() - start_timer >= timeout))
             '''
-            timed_out = False
-            await(condition(start_timer,timeout,timed_out,x,req))
+            if await(condition(x, req)):
+                conflict = checkForConflicts(x, req)
+            elif timeout(timeout):
+                output("Exiting CACHE: %s and Results: %s", self._CACHE, req)
+                output("Restart Request due to timeout %s: ", req)
+                send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
+                send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
+                return
             '''
             while True:
                 if common.now() - start_timer >= timeout:
@@ -242,16 +244,13 @@ class Coord(process):
                         count_empty += 1
                 if count_empty == len(req.updates):
                     break
-            '''
             if timed_out == True:
                 output("Exiting CACHE: %s and Results: %s", self._CACHE, req)
                 output("Restart Request due to timeout %s: ", req)
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
                 return
-
-
-            conflict = checkForConflicts(x, req)
+            '''
 
             if not conflict:
                 send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])
