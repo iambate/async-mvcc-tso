@@ -46,6 +46,7 @@ class DB(process):
             content+=":="
             #output(obj,":\n")
             for attr in self.database[obj]:
+                content+="ATTRIBUTE "
                 content+=attr
                 content+=":"
                 #output(attr,":")
