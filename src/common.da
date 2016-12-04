@@ -43,6 +43,7 @@ class Request:
     '''
     def  __init__(self,subject,resource,action_type):
         self.id = uuid.uuid4().int
+        self._id = 0
         self.subject = subject
         self.resource = resource
         self.action = action_type
@@ -65,7 +66,8 @@ class Request:
         self.cachedUpdates = {}
 
     def __str__(self):
-        return  "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \
+        return  "Req _ID: " + str(self._id) + "\n" +\
+                "Req ID: " + str(self.id) + "\nSubject:\n" + str(self.subject) + \
                 "Resource:\n" + str(self.resource) + \
                 "action: " + self.action + \
                 "\nReadAttr Obj1: " + str(self.readAttr[1]) + \
