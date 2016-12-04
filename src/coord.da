@@ -121,13 +121,15 @@ class Coord(process):
         for attr in common.mightReadAttr(x, req):
             if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightRead:
                 latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
-        output("STATUS OF cache AFTER 1ST ARRIVAL OF req with reqid:",req.id,"reqts:",req.ts)
+
+        print_cache = ""
         for i in self._CACHE:
-            output(str(i),":")
+            print_cache += "OBJECT:"+str(i)+":"
             for j in self._CACHE[i]:
-                output(j,":")
+                print_cache+="ATTRIBUTE:"+j +":"
                 for k in self._CACHE[i][j]:
-                    output(str(k.rts)," ",str(k.wts)," ",k.pendingMightRead,k.pendingMightWrite)
+                    print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
+        output("CACHE CONTENT AFTER 1ST ARRIVAL OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
 
         req.cachedUpdates[n] = cachedUpdates(x, req)
         if n == 1:
@@ -156,14 +158,15 @@ class Coord(process):
                 output("ReadAttr mightWrite :%s", v)
                 v.pendingMightWrite.remove(req.id)
 
-        output("UPDATING CACHE AFTER REQ COMPLETION OF req with reqid:",req.id,"reqts:",req.ts)
-        #output("pmr of latestversionbefore")
+        print_cache = ""
         for i in self._CACHE:
-            output(str(i),":")
+            print_cache += "OBJECT:"+str(i)+":"
             for j in self._CACHE[i]:
-                output(j,":")
+                print_cache+="ATTRIBUTE:"+j +":"
                 for k in self._CACHE[i][j]:
-                    output(str(k.rts)," ",str(k.wts)," ",k.pendingMightRead,k.pendingMightWrite)
+                    print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
+        output("COORDINATOR CLEANING UP CHANGES MADE BY COMPLETED REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+        
         output("Exiting received a ReadAttr request for object: %d, Request: "+ str(req), i)
 
     def checkForConflicts(x, req):
@@ -227,13 +230,16 @@ class Coord(process):
                         v.pendingMightRead.remove(req.id)
                     if attr in req.readAttr[req.updatedObj]:
                         v.rts = req.ts
-                output("UPDATED READATTR RTS,REMOVED FROM PENDINGMIGHTREAD reqid:",req.id,"reqts:",req.ts)
+
+                print_cache = ""
                 for i in self._CACHE:
-                    output(str(i),":")
+                    print_cache += "OBJECT:"+str(i)+":"
                     for j in self._CACHE[i]:
-                        output(j,":")
+                        print_cache+="ATTRIBUTE:"+j +":"
                         for k in self._CACHE[i][j]:
-                            output(str(k.rts)," ",str(k.wts)," ",k.pendingMightRead,k.pendingMightWrite)
+                            print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
+                output("REQ EVALUATION COMPLETED,SENDING RESPONSE TO CLIENT Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+                
                 send(('Response', req), to=req.client)
                 send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
