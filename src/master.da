@@ -28,6 +28,7 @@ class Client(process):
                 subj = common.Object(requests[i]["subjid"], requests[i]["subjtype"])
                 res = common.Object(requests[i]["resid"], requests[i]["restype"])
                 req = common.Request(subj, res, requests[i]["action"])
+                req.requestNo = requestNo
                 req.client = self
                 if req.resource in common.mightWriteObj(req):
                     obj1 = req.subject
@@ -38,11 +39,16 @@ class Client(process):
                 req.objects.append(obj1)
                 req.objects.append(obj2)
                 req._id = int(i)
+
+                '''
+                wait if in request
+                '''
                 if "client_wait" in requests[i]: time.sleep(requests[i]["client_wait"])
+
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
         send(('Done'), to = list(set(self.workers_list) | set(self.coords_list) | set(self.dbs)))
-        #output("client exiting")
+        output("client exiting")
 
     def receive(msg=('Response', response)):
         output("Response received by Client: %s",str(response))

@@ -18,6 +18,6 @@ requests = {
                 "restype": "bank",
                 "action": "read",
 		"client_wait" : 0,
-                "worker_wait"  : 10
+                "worker_wait"  : 3
             }
 }

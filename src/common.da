@@ -1,7 +1,15 @@
 from enum import Enum
+import os
+import sys
 import xml.etree.ElementTree as ET
 import time
 import uuid
+
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(THIS_DIR + "/..")
+
+from config import master_config as conf
+
 
 class ObjectTypeEnum(Enum):
     SUBJECT = 1
@@ -44,6 +52,7 @@ class Request:
     def  __init__(self,subject,resource,action_type):
         self.id = uuid.uuid4().int
         self._id = 0
+        self.requestNo = 0
         self.subject = subject
         self.resource = resource
         self.action = action_type
@@ -84,7 +93,7 @@ def isSame(x,obj):
     return False
 
 def populateRequest(req):
-    tree = ET.parse('policy-example.xml')
+    tree = ET.parse(THIS_DIR + "/../config/" + conf.cnfg[req.requestNo].policy)
     root = tree.getroot()
     rules_match = 0
     subj_attributes = {}

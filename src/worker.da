@@ -35,24 +35,6 @@ def Match(curr_val_of_attribute, val_to_match_against):
     return False
 
 
-def staticAnalysis(req):
-    tree = ET.parse(THIS_DIR + '/../policy-example.xml')
-    root = tree.getroot()
-    rules_match = 0
-    subj_attributes = {}
-    res_attributes = {}
-    R = []
-    for rule in root.iter('rule'):
-        rc = rule.find('resourceCondition').attrib["type"]
-        act = rule.find('action').attrib["name"]
-        sc = rule.find('subjectCondition').attrib["type"]
-        subject = req.subject
-        resource = req.resource
-
-        if sc == subject.type and rc == resource.type and act == req.action:
-            R.append(rule)
-    return R
-
 def _add_attrs(attr, d):
     if d:
         attr += list(d)
@@ -77,6 +59,24 @@ class Worker(process):
     def setup(coords_list, dbs_list, requestNo):
         self.logger = logging.getLogger(__name__)
         self.q = queue.Queue()
+
+    def staticAnalysis(req):
+        tree = ET.parse(THIS_DIR + '/../config/' + conf.cnfg[self.requestNo].policy)
+        root = tree.getroot()
+        rules_match = 0
+        subj_attributes = {}
+        res_attributes = {}
+        R = []
+        for rule in root.iter('rule'):
+            rc = rule.find('resourceCondition').attrib["type"]
+            act = rule.find('action').attrib["name"]
+            sc = rule.find('subjectCondition').attrib["type"]
+            subject = req.subject
+            resource = req.resource
+
+            if sc == subject.type and rc == resource.type and act == req.action:
+                R.append(rule)
+        return R
 
     def evaluate(rule, req):
         decision = None
