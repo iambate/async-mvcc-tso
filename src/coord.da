@@ -190,6 +190,21 @@ class Coord(process):
             if v.rts > req.ts:
                 return True
         return False
+    
+    def condition(start_timer,timeout,timed_out,x,req):
+        if common.now() - start_timer >= timeout:
+            timed_out = True
+            return True
+        count_empty = 0
+        for attr in req.updates.keys():
+            if len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 0 \
+            or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
+            req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
+                count_empty += 1
+        if count_empty == len(req.updates):
+            return True
+        return False
+
 
     def receive(msg=('Result',req)):
         output("Entering CACHE: %s and Results: %s", self._CACHE, req)
@@ -216,6 +231,8 @@ class Coord(process):
                     req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), (common.now() - start_timer >= timeout))
             '''
             timed_out = False
+            await(condition(start_timer,timeout,timed_out,x,req))
+            '''
             while True:
                 if common.now() - start_timer >= timeout:
                     timed_out = True
@@ -228,7 +245,7 @@ class Coord(process):
                         count_empty += 1
                 if count_empty == len(req.updates):
                     break
- 
+            '''
             if timed_out == True:
                 output("Exiting CACHE: %s and Results: %s", self._CACHE, req)
                 output("Restart Request due to timeout %s: ", req)
