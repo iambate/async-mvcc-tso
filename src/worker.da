@@ -144,7 +144,7 @@ class Worker(process):
             send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[0])
             await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
             output("Received response from Db: %s", unique_db_req)
-            for attr in newR.keys():
+            for attr in newR.keys():#gargi
                 R.readAttr[i][attr] = newR[attr]
         return R
 
@@ -171,7 +171,7 @@ class Worker(process):
             for i in [1,2]:
                 for attrs in attr_list[i]:
                     if attrs in R.cachedUpdates[i] and R.cachedUpdates[i][attrs].value != None:
-                        if attrs not in R.readAttr[i]:
+                        if attrs not in R.readAttr[i]:#gargi
                             R.readAttr[i][attrs] = {}
                         R.readAttr[i][attrs] = R.cachedUpdates[i][attrs]
                     else:
@@ -197,13 +197,19 @@ class Worker(process):
                 send(('ReadAttr', R, i), to=common.coord(common.obj(R,i), coords_list))
         else:
             # Write Request
+            # updates[attribute_to_update]=apply_Operation(old_val_of_attr,operation)
             if result.updatedObj == common.obj(R, 1):
                 R.updatedObj = 1
+                for attr in result.updates.keys():
+                    R.readAttr[1][attr] = result.updates[attr]
                 R.rdOnlyObj = 2
             else:
                 R.updatedObj = 2
+                for attr in result.updates.keys():
+                    R.readAttr[2][attr] = result.updates[attr]
                 R.rdOnlyObj = 1
             R.updates = result.updates
+
             output("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
             send(('Result', R), to=common.coord(common.obj(R, R.updatedObj), coords_list))
 

@@ -214,15 +214,6 @@ class Coord(process):
 
             timeout = 2 * random.random()
 
-            '''
-            await((forall attr in req.updates.keys():
-                  
-                  (latestVersionBefore(x,attr,req.ts).pendingMightRead.empty() == True) or
-                  
-                  (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and
-                
-                    req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead)), (common.now() - start_timer >= timeout))
-            '''
             if await(condition(x, req)):
                 conflict = checkForConflicts(x, req)
             elif timeout(timeout):
@@ -231,26 +222,7 @@ class Coord(process):
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
                 return
-            '''
-            while True:
-                if common.now() - start_timer >= timeout:
-                    timed_out = True
-                    break
-                count_empty = 0
-                for attr in req.updates.keys():
-                    if len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 0 \
-                    or (len(latestVersionBefore(x,attr,req.ts).pendingMightRead) == 1 and \
-                    req.id in latestVersionBefore(x,attr,req.ts).pendingMightRead):
-                        count_empty += 1
-                if count_empty == len(req.updates):
-                    break
-            if timed_out == True:
-                output("Exiting CACHE: %s and Results: %s", self._CACHE, req)
-                output("Restart Request due to timeout %s: ", req)
-                send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
-                send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
-                return
-            '''
+ 
 
             if not conflict:
                 send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])

@@ -118,6 +118,8 @@ def populateRequest(req):
                 for key in sub_write.attrib.keys():
                     if key not in req.subject_mightWriteAttr:
                         req.subject_mightWriteAttr.append(key)
+                    if key not in req.subject_mightRead:
+                        req.subject_mightRead.append(key)
                     if sub_write.attrib[key][0] == '+' or  sub_write.attrib[key][0] == '-':
                         if key not in req.subject_mightRead:
                             req.subject_mightRead.append(key)
@@ -128,6 +130,9 @@ def populateRequest(req):
                 for key in res_write.attrib.keys():
                     if key not in req.resource_mightWriteAttr:
                         req.resource_mightWriteAttr.append(key)
+                    #an attribute that might be updated might also be read if written to .
+                    if key not in req.resource_mightRead:
+                        req.resource_mightRead.append(key)
                     if res_write.attrib[key][0] == '+' or  res_write.attrib[key][0] == '-':
                         if key not in req.resource_mightRead:
                             req.resource_mightRead.append(key)
