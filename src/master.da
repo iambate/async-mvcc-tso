@@ -14,8 +14,12 @@ coord = import_da("coord")
 common = import_da("common")
 
 class Client(process):
-    def setup(coords_list, requestNo):
+    def setup(coords_list, dbs, workers_list, requestNo):
         self.logger = logging.getLogger(__name__)
+
+        #output("client process w:",workers_list)
+        #output("client process c:",coords_list)
+        #output("client process d:",dbs)
 
     def run():
         requests = conf.cnfg[requestNo].requests
@@ -37,6 +41,8 @@ class Client(process):
                 if "client_wait" in requests[i]: time.sleep(requests[i]["client_wait"])
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
+        send(('Done'), to = list(set(self.workers_list) | set(self.coords_list) | set(self.dbs)))
+        #output("client exiting")
 
     def receive(msg=('Response', response)):
         output("Response received by Client: %s",str(response))
@@ -67,14 +73,17 @@ def main():
     setup(dbs, (requestNo,))
     setup(workers, (list(coords), list(dbs), requestNo))
     setup(coords, (list(coords), list(workers), list(dbs), requestNo))
-    setup(clients, (list(coords), requestNo))
+    setup(clients, (list(coords), list(dbs), list(workers), requestNo))
 
     start(dbs)
     start(workers)
     start(coords)
     start(clients)
 
-    for c in clients: c.join()
+    #output("main process w:",workers)
+    #output("main process c:",coords)
+    #output("main process d:",dbs)
+    #for c in clients: c.join()
 
     # Terminate the process
-    send(('Done'), to = (workers | coords | dbs))
+    #send(('Done'), to = (workers | coords | dbs))

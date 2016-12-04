@@ -30,3 +30,32 @@ class DB(process):
                     if attr in self.database[obj.id]:
                         reply[attr] = commonpy.max_version(list(v for v in self.database[obj.id][attr] if v.wts < ts))
             send(('ReadDbResponse', unique_db_req, reply), to=p)
+    #updates are of format : {attr1:}
+    def receive(msg=("UpdateDatabase",obj,updates,ts), from_=p): 
+        for attr in updates:
+            self.database[obj][attr].append(common.Versions(wts=ts, value= updates[attr]))
+        
+
+    def receive(msg=("Done")):
+        #output("Database received done")
+        output('----------------DATABASE CONTENT----------------')
+        content = ""
+        for obj in self.database.keys():
+            content+="OBJECT "
+            content+=str(obj)
+            content+=":="
+            #output(obj,":\n")
+            for attr in self.database[obj]:
+                content+=attr
+                content+=":"
+                #output(attr,":")
+                for versions in self.database[obj][attr]:
+                    content+="wts="
+                    content+=str(versions.wts)
+                    content+=" value="
+                    content+=str(versions.value)
+                    content+=","
+        output(content)
+        output("------------------------------------------------")
+        return True
+
