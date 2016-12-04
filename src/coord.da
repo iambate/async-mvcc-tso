@@ -154,13 +154,15 @@ class Coord(process):
     def receive(msg=('ReadAttr', req, i)):
         output("Entering received a ReadAttr request for object: %d, Request: "+ str(req), i)
         x = common.obj(req, i)
-        for attr in common.mightReadAttr(x, req):
+        for attr in list(set(common.mightReadAttr(x, req) + common.defReadAttr(x, req))):
             v = latestVersionBefore(x, attr, req.ts)
             if req.id in v.pendingMightRead:
                 output("ReadAttr mightRead :%s", v)
                 v.pendingMightRead.remove(req.id)
-            if attr in req.readAttr[i]:
-                v.rts = req.ts
+            if attr in req.readAttr[i].keys():
+                output("BEFORE UPDATION:", self._CACHE[x.id][attr])
+                if v.rts < req.ts:
+                    v.rts = req.ts
         for attr in common.mightWriteAttr(x, req):
             v = latestVersionBefore(x, attr, req.ts)
             if req.id in v.pendingMightRead:
