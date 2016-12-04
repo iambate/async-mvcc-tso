@@ -122,14 +122,11 @@ class Coord(process):
             for attr in common.defReadAttr(x,req):
                 if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightRead:
                     latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
-        '''
         if req.restarted == True:
-            output("Returning restarted True: %s", req)
-            return
-        '''
-        for attr in common.mightWriteAttr(x, req):
-            if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightWrite:
-                latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
+            output("Restarted Request gets Priority")
+            for attr in common.mightWriteAttr(x, req):
+                if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightWrite:
+                    latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
         for attr in common.mightReadAttr(x, req):
             if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightRead:
@@ -274,15 +271,12 @@ class Coord(process):
                     if attr in req.readAttr[req.updatedObj]:
                         v.rts = req.ts
                 output("UPDATED READATTR RTS,REMOVED FROM PENDINGMIGHTREAD reqid:",req.id,"reqts:",req.ts)
-                #output("pmr of latestversionbefore")
                 for i in self._CACHE:
                     output(str(i),":")
                     for j in self._CACHE[i]:
                         output(j,":")
                         for k in self._CACHE[i][j]:
                             output(str(k.rts)," ",str(k.wts)," ",k.pendingMightRead,k.pendingMightWrite)
-                #output("xxxxxxxxx end new xxxxxxx")
-                #print_cache("req evaluated without conflicts,updating rts of its read attrs,",req)
                 send(('Response', req), to=req.client)
                 send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
