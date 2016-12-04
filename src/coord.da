@@ -91,27 +91,17 @@ class Coord(process):
     def check_if_any_empty():
         q = queue.Queue()
         while not self.waitingq.empty():
-                r = self.waitingq.get()
-                if check_if_empty(r["tobeRead"], r["x"], r["req"]):
-                    self.handle_request(r["req"], r["n"], r["x"])
-                else:
-                    q.put(r)
+            r = self.waitingq.get()
+            if check_if_empty(r["tobeRead"], r["x"], r["req"]):
+                self.handle_request(r["req"], r["n"], r["x"])
+            else:
+                q.put(r)
         while not q.empty():
             r = q.get()
             self.waitingq.put(r)
         return False
 
     def handle_request(req, n, x):
-        '''
-        while True:
-            count_empty = 0
-            for attr in tobeRead:
-                if len(latestVersionBefore(x,attr,req.ts).pendingMightWrite) == 0:
-                    count_empty += 1
-
-            if count_empty == len(tobeRead):
-                break
-        '''
         output("Stop waiting before proceeding to work: %s", str(req))
 
 
@@ -132,16 +122,13 @@ class Coord(process):
             if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightRead:
                 latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
         output("STATUS OF cache AFTER 1ST ARRIVAL OF req with reqid:",req.id,"reqts:",req.ts)
-        #output("pmr of latestversionbefore")
         for i in self._CACHE:
             output(str(i),":")
             for j in self._CACHE[i]:
                 output(j,":")
                 for k in self._CACHE[i][j]:
                     output(str(k.rts)," ",str(k.wts)," ",k.pendingMightRead,k.pendingMightWrite)
-        #output("")
 
-        #print_cache("ro req, updating rts or pendingmightreads for all its defreadattr",req)
         req.cachedUpdates[n] = cachedUpdates(x, req)
         if n == 1:
             send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
@@ -184,7 +171,7 @@ class Coord(process):
         for attr in req.updates.keys():
             v = latestVersionBefore(x,attr,req.ts)
             output("Version: %s", str(v))
-            if v.rts > req.ts:
+            if v.rts > req.ts or v.wts != req.cachedUpdates[req.updatedObj][attr].wts:
                 return True
         return False
     
@@ -266,11 +253,15 @@ class Coord(process):
         x = common.obj(req, n)
         
         for attr in list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req))):
-            latestVersionBefore(x, attr, req.ts).pendingMightRead.remove(req.id)
+            v = latestVersionBefore(x, attr, req.ts).pendingMightRead
+            if req.id in v:
+                v.remove(req.id)
 
 
         for attr in common.mightWriteAttr(x, req):
-            latestVersionBefore(x, attr, req.ts).pendingMightWrite.remove(req.id)
+            v = latestVersionBefore(x, attr, req.ts).pendingMightWrite
+            if req.id in v:
+                v.remove(req.id)
         if n == 2:
             req.restarted = True
             send(('Request', req, 1), to=common.coord(common.obj(req, 1), coords_list))
