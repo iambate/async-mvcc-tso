@@ -225,7 +225,6 @@ class Coord(process):
                     # Verify Again
                     if req.id in v.pendingMightRead:
                         v.pendingMightRead.remove(req.id)
-                        #v.rts = req.ts
                     if attr in req.readAttr[req.updatedObj]:
                         v.rts = req.ts
                 output("UPDATED READATTR RTS,REMOVED FROM PENDINGMIGHTREAD reqid:",req.id,"reqts:",req.ts)
