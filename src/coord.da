@@ -221,7 +221,7 @@ class Coord(process):
                 AllAttrsRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)))
                 for attr in AllAttrsRead:
                     v = latestVersionBefore(x,attr,req.ts)
-                    self.logging.debug("No conflict: %s", v)
+                    output("No conflict: ", v)
                     # Verify Again
                     if req.id in v.pendingMightRead:
                         v.pendingMightRead.remove(req.id)
