@@ -95,7 +95,7 @@ class Worker(process):
         
         count_match_sub_attr = 0
         for rule_attr in sc.attrib.keys():
-            self.logger.debug(req.readAttr)
+            output(req.readAttr)
             curr_val_of_attribute = req.readAttr[sub_index][rule_attr].value
             val_to_match_against = sc.attrib[rule_attr]
             if Match(curr_val_of_attribute, val_to_match_against):
@@ -140,10 +140,10 @@ class Worker(process):
     def readFromDB(R, objs, attr_from_db, rule_no, db_no):
         for i in [1, 2]:
             unique_db_req = str(R.id) + str(rule_no) + str(i)
-            self.logger.debug("Sending Read to Db: %s", unique_db_req)
+            output("Sending Read to Db: %s", unique_db_req)
             send(('Read', unique_db_req, objs[i-1], attr_from_db[i], R.ts), to=self.dbs_list[0])
             await(some(received(('ReadDbResponse', id, newR)), has=(id==unique_db_req)))
-            self.logger.debug("Received response from Db: %s", unique_db_req)
+            output("Received response from Db: %s", unique_db_req)
             for attr in newR.keys():
                 R.readAttr[i][attr] = newR[attr]
         return R
@@ -151,7 +151,7 @@ class Worker(process):
     def doWork(work):
         rules = work['rules']
         R = work['request']
-        self.logger.debug("Proceeding to Work: %s", R)
+        output("Proceeding to Work: %s", R)
         p= work['fromProcess']
         coords_list = work['coords_list']
         worker_no = work['worker_no']
@@ -190,9 +190,9 @@ class Worker(process):
             R.updatedObj = -1
             R.rdOnlyObj = -1
             R.updates = dict()
-            self.logger.debug("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
+            output("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
             send(('Response', R), to=R.client)
-            self.logger.debug("Read Only Request. Sending request to client: %s", R)
+            output("Read Only Request. Sending request to client: %s", R)
             for i in [1, 2]:
                 send(('ReadAttr', R, i), to=common.coord(common.obj(R,i), coords_list))
         else:
@@ -204,7 +204,7 @@ class Worker(process):
                 R.updatedObj = 2
                 R.rdOnlyObj = 1
             R.updates = result.updates
-            self.logger.debug("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
+            output("Result after evaluating %s rule/s: %s", str(rule_no), str(R))
             send(('Result', R), to=common.coord(common.obj(R, R.updatedObj), coords_list))
 
     def run():
@@ -216,7 +216,7 @@ class Worker(process):
                 break
 
     def receive(msg=('Request', R), from_=p):
-        self.logger.debug("Request received by worker: %s", R)
+        output("Request received by worker: %s", R)
         rules = staticAnalysis(R)
         work = {}
         work['rules'] = rules

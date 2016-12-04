@@ -23,7 +23,7 @@ class DB(process):
         await(received(('Done')))
 
     def receive(msg=('Read', unique_db_req, obj, attrs, ts), from_=p):
-            self.logger.debug("DB received request: %s", unique_db_req)
+            output("DB received request: %s", unique_db_req)
             reply = {}
             if obj.id in self.database:
                 for attr in attrs:

@@ -41,7 +41,7 @@ class Client(process):
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
 
     def receive(msg=('Response', response)):
-        self.logger.info("Response received by Client: %s",str(response))
+        output("Response received by Client: %s",str(response))
 
 
 def main():
