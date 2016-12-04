@@ -19,6 +19,8 @@ from config import requests21
 from config import requests22
 from config import requests23
 
+from config import requests32
+
 class conf:
     def __init__(self):
         self.database = None
@@ -79,6 +81,14 @@ c3.minDBlatency = 1
 c3.maxDBlatency = 5
 c3.requests = requests3.requests
 cnfg[3]=c3
+
+# Configuration Three Two
+c32 = conf()
+c32.database = database2.attribute_db
+c32.minDBlatency = 1
+c32.maxDBlatency = 5
+c32.requests = requests32.requests
+cnfg[32]=c32
 
 # Configuration Four
 c4 = conf()

@@ -29,6 +29,6 @@ attribute_db = {
             {
                 "name": "Sahil",
                 "type" : "employee",
-                "history": 258
+                "history": "BankB"
             }
 }

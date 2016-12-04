@@ -1,11 +1,12 @@
 import xml.etree.ElementTree as ET
 import logging
 import os
-import sys
 import queue
+import sys
+import time
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
-from config import master_config
+from config import master_config as conf
 common = import_da('common')
 
 class Result:
@@ -182,6 +183,12 @@ class Worker(process):
             if result.decision == 'permit' or result.decision == 'deny':
                             break
             rule_no += 1
+
+        '''
+        wait if in request
+        '''
+        if "worker_wait" in conf.cnfg[self.requestNo].requests[R._id]: time.sleep(conf.cnfg[self.requestNo].requests[R._id]["worker_wait"])
+
         if result.decision == None:
             R.decision = 'deny'
         else:
