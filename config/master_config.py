@@ -5,22 +5,24 @@ THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 
 from config import database1
-from config import database2
 
 from config import requests1
-from config import requests2
-from config import requests3
 from config import requests4
 from config import requests6
-from config import requests5
 
+from config import requests2
+from config import database2
 from config import requests21
 from config import requests22
 from config import requests23
 
+from config import requests3
+from config import database3
 from config import requests32
 from config import requests33
-from config import database3
+
+from config import requests5
+from config import database5
 
 class conf:
     def __init__(self):
@@ -81,6 +83,7 @@ cnfg[23]=c23
 # Configuration Three
 c3 = conf()
 c3.database = database2.attribute_db
+c3.policy = "policy-example3.xml"
 c3.minDBlatency = 1
 c3.maxDBlatency = 5
 c3.requests = requests3.requests
@@ -103,3 +106,12 @@ c33.minDBlatency = 1
 c33.maxDBlatency = 5
 c33.requests = requests33.requests
 cnfg[33]=c33
+
+# Configuration Five
+c5 = conf()
+c5.database = database5.attribute_db
+c5.policy = "policy-example5.xml"
+c5.minDBlatency = 1
+c5.maxDBlatency = 5
+c5.requests = requests5.requests
+cnfg[5]=c5

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <!-- sample policy.  CSE 535, Fall 2016, Scott Stoller.  2016-10-03 -->
+<!-- Measure number of times old user visit bank & restrict that count-->
 <policy>
 
   <rule name="access bank A first time">
@@ -12,8 +13,9 @@
 
   <rule name="access bank A again">
     <subjectCondition type="employee" history="BankA"></subjectCondition>
-    <resourceCondition type="bank" name="BankA"></resourceCondition>
+    <resourceCondition type="bank" name="BankA" count="&lt;4"></resourceCondition>
     <action name="read"></action>
+    <resourceUpdate count="++"></resourceUpdate>
   </rule>
 
   <rule name="access bank B first time">
@@ -25,8 +27,9 @@
 
   <rule name="access bank B again">
     <subjectCondition type="employee" history="BankB"></subjectCondition>
-    <resourceCondition type="bank" name="BankB"></resourceCondition>
+    <resourceCondition type="bank" name="BankB" count="&lt;4"></resourceCondition>
     <action name="read"></action>
+    <resourceUpdate count="++"></resourceUpdate>
   </rule>
 
   <rule name="customers collectively can view each movie at most 5 times">
