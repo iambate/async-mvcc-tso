@@ -6,7 +6,8 @@ requests = {
                 "resid" : 257,
                 "restype": "bank",
                 "action": "read",
-                "wait"  : 6
+                "client_wait"  : 0,
+                "worker_wait"  : 0
             }
         ,
         2:
@@ -16,42 +17,7 @@ requests = {
                 "resid" : 257,
                 "restype": "bank",
                 "action": "read",
-            }
-        ,
-        3:
-            {
-                "subjid": 1,
-                "subjtype": "employee",
-                "resid" : 258,
-                "restype": "bank",
-                "action": "read",
-                "wait"  : 1
-            }
-        ,
-        4:
-            {
-                "subjid": 1,
-                "subjtype": "employee",
-                "resid" : 257,
-                "restype": "bank",
-                "action": "read"
-            }
-        ,
-        5:
-            {
-                "subjid": 2,
-                "subjtype": "employee",
-                "resid" : 258,
-                "restype": "bank",
-                "action": "read"
-            }
-        ,
-        6:
-            {
-                "subjid": 3,
-                "subjtype": "employee",
-                "resid" : 257,
-                "restype": "bank",
-                "action": "read"
+		"client_wait" : 0,
+                "worker_wait"  : 5
             }
 }

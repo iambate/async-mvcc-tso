@@ -203,6 +203,15 @@ class Coord(process):
             output("Result received at ", req.updatedObj , " coordinator, which is subject coordinator:", req)
         else:
             output("Result received at ", req.updatedObj , " coordinator, which is resource coordinator:", req)
+        print_cache = ""
+        for i in self._CACHE:
+            print_cache += "OBJECT:"+str(i)+":"
+            for j in self._CACHE[i]:
+                print_cache+="ATTRIBUTE:"+j +":"
+                for k in self._CACHE[i][j]:
+                    print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
+        output("CACHE CONTENT AFTER 2ND ARRIVAL (BEFORE WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+
         conflict = checkForConflicts(x, req)
 
         if conflict == False:
@@ -221,6 +230,14 @@ class Coord(process):
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
                 return
  
+            print_cache = ""
+            for i in self._CACHE:
+                print_cache += "OBJECT:"+str(i)+":"
+                for j in self._CACHE[i]:
+                    print_cache+="ATTRIBUTE:"+j +":"
+                    for k in self._CACHE[i][j]:
+                        print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
+            output("CACHE CONTENT AFTER 2ND ARRIVAL (AFTER WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
 
             if not conflict:
                 send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])

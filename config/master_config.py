@@ -4,25 +4,27 @@ import sys
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(THIS_DIR + "/..")
 
-from config import database1
 
 from config import requests1
-from config import requests4
-from config import requests6
+from config import database1
 
 from config import requests2
 from config import database2
-from config import requests21
-from config import requests22
-from config import requests23
 
 from config import requests3
 from config import database3
-from config import requests32
-from config import requests33
+
+from config import requests4
+from config import database4
 
 from config import requests5
 from config import database5
+
+from config import requests6
+from config import database6
+
+from config import requests7
+from config import database7
 
 class conf:
     def __init__(self):

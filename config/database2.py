@@ -3,7 +3,7 @@ attribute_db = {
             {
                 "name": "Tom",
                 "type" : "employee",
-                "history": ""
+                "history": "BankA"
             }
         ,
         2:
@@ -16,13 +16,15 @@ attribute_db = {
         257:
             {
                 "name": "BankA",
-                "type" : "bank"
+                "type" : "bank",
+		"count" : 0
             }
         ,
         258:
             {
                 "name": "BankB",
-                "type" : "bank"
+                "type" : "bank",
+		"count": 1
             }
         ,
         3:
