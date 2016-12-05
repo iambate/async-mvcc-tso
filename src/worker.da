@@ -239,7 +239,15 @@ class Worker(process):
                 break
 
     def receive(msg=('Request', R), from_=p):
-        output("Request received by worker: %s", R)
+        output("Request received by worker:", R)
+        if conf.cnfg[self.requestNo].zeroLatency:
+            R.decision = "deny"
+            send(('Response', R), to=R.client)
+            output("ZERO LATENCY Request. Sending request to client: %s", R)
+            for i in [1, 2]:
+                send(('ReadAttr', R, i), to=common.coord(common.obj(R,i), coords_list))
+            return
+
         rules = staticAnalysis(R)
         work = {}
         work['rules'] = rules

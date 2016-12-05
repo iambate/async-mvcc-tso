@@ -50,7 +50,10 @@ class Client(process):
                     elif timeout(requests[i]["client_wait"]): pass
 
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
-        await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
+                if conf.cnfg[requestNo].zeroLatency:
+                    await(some(received(('Response', r)), has=(r.id == req.id)))
+        if not conf.cnfg[requestNo].zeroLatency:
+            await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
         send(('END'), to = end_all_proc)
         output("client exiting")
 
