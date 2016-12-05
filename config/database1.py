@@ -1,36 +1,20 @@
 attribute_db = {
-        1:
+        499843099417151611388615687477015317:
             {
                 "name": "Tom",
-                "type" : "employee",
+                "position" : "employee",
                 "history": ""
             }
         ,
-        2:
+        155091234974256788277836142235998860155:
             {
                 "name": "Jack",
-                "type": "employee",
-                "history": "BankA"
+                "position": "employee",
+                "history":148129378713822695092024786190223120138
             }
         ,
-        257:
+        148129378713822695092024786190223120138:
             {
-                "name": "BankA",
-                "type" : "bank",
-                "count" :0
-            }
-        ,
-        258:
-            {
-                "name": "BankB",
-                "type" : "bank",
-                "count" : 0
-            }
-        ,
-        3:
-            {
-                "name": "Sahil",
-                "type" : "employee",
-                "history": "BankA"
+                "name": "BankA"
             }
 }
