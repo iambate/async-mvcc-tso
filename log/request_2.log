@@ -1,0 +1,881 @@
+2016-12-05 17:00:37,019 - master.Node_ - DEBUG - Creating instances of <class 'master.Client'> using 'process'
+2016-12-05 17:00:37,028 - master.Client - DEBUG - Delayed start.
+2016-12-05 17:00:37,057 - master.Node_ - DEBUG - 1 instances of <class 'master.Client'> created.
+2016-12-05 17:00:37,057 - master.Node_ - DEBUG - Creating instances of <class 'coord.Coord'> using 'process'
+2016-12-05 17:00:37,069 - coord.Coord - DEBUG - Delayed start.
+2016-12-05 17:00:37,083 - coord.Coord - DEBUG - Delayed start.
+2016-12-05 17:00:37,096 - coord.Coord - DEBUG - Delayed start.
+2016-12-05 17:00:37,108 - coord.Coord - DEBUG - Delayed start.
+2016-12-05 17:00:37,124 - coord.Coord - DEBUG - Delayed start.
+2016-12-05 17:00:37,139 - coord.Coord - DEBUG - Delayed start.
+2016-12-05 17:00:37,145 - master.Node_ - DEBUG - 6 instances of <class 'coord.Coord'> created.
+2016-12-05 17:00:37,147 - master.Node_ - DEBUG - Creating instances of <class 'worker.Worker'> using 'process'
+2016-12-05 17:00:37,156 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,169 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,182 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,195 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,207 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,220 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,233 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,247 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,262 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,276 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,295 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,312 - worker.Worker - DEBUG - Delayed start.
+2016-12-05 17:00:37,316 - master.Node_ - DEBUG - 12 instances of <class 'worker.Worker'> created.
+2016-12-05 17:00:37,317 - master.Node_ - DEBUG - Creating instances of <class 'db.DB'> using 'process'
+2016-12-05 17:00:37,326 - db.DB - DEBUG - Delayed start.
+2016-12-05 17:00:37,333 - master.Node_ - DEBUG - 1 instances of <class 'db.DB'> created.
+2016-12-05 17:00:37,333 - master.Node_ - DEBUG - Creating instances of <class 'master.clEND'> using 'process'
+2016-12-05 17:00:37,343 - master.clEND - DEBUG - Delayed start.
+2016-12-05 17:00:37,349 - master.Node_ - DEBUG - 1 instances of <class 'master.clEND'> created.
+2016-12-05 17:00:37,353 - master.clEND - DEBUG - Running `setup` with args (126100848144023558, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<Client:da402>])).
+2016-12-05 17:00:37,354 - master.clEND - DEBUG - `setup` complete.
+2016-12-05 17:00:37,357 - db.DB - DEBUG - Running `setup` with args (126100848144023559, (2,)).
+2016-12-05 17:00:37,358 - db.DB - DEBUG - `setup` complete.
+2016-12-05 17:00:37,361 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,362 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,363 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,364 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,365 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,366 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,367 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,368 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,370 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,372 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,372 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,373 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,374 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,375 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,379 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,380 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,381 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,382 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,383 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,384 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,386 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,386 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,388 - worker.Worker - DEBUG - Running `setup` with args (126100848144023560, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,388 - worker.Worker - DEBUG - `setup` complete.
+2016-12-05 17:00:37,391 - coord.Coord - DEBUG - Running `setup` with args (126100848144023561, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,392 - coord.Coord - DEBUG - `setup` complete.
+2016-12-05 17:00:37,395 - coord.Coord - DEBUG - Running `setup` with args (126100848144023561, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,396 - coord.Coord - DEBUG - `setup` complete.
+2016-12-05 17:00:37,397 - coord.Coord - DEBUG - Running `setup` with args (126100848144023561, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,398 - coord.Coord - DEBUG - `setup` complete.
+2016-12-05 17:00:37,399 - coord.Coord - DEBUG - Running `setup` with args (126100848144023561, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,400 - coord.Coord - DEBUG - `setup` complete.
+2016-12-05 17:00:37,402 - coord.Coord - DEBUG - Running `setup` with args (126100848144023561, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,403 - coord.Coord - DEBUG - `setup` complete.
+2016-12-05 17:00:37,404 - coord.Coord - DEBUG - Running `setup` with args (126100848144023561, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], [<Worker:da411>, <Worker:da409>, <Worker:da412>, <Worker:da40c>, <Worker:da40e>, <Worker:da40a>, <Worker:da40b>, <Worker:da40d>, <Worker:da413>, <Worker:da40f>, <Worker:da410>, <Worker:da414>], [<DB:da415>], 2)).
+2016-12-05 17:00:37,405 - coord.Coord - DEBUG - `setup` complete.
+2016-12-05 17:00:37,409 - master.Client - DEBUG - Running `setup` with args (126100848144023562, ([<Coord:da408>, <Coord:da404>, <Coord:da405>, <Coord:da407>, <Coord:da403>, <Coord:da406>], {<clEND:da416>}, 2)).
+2016-12-05 17:00:37,411 - master.Client - DEBUG - `setup` complete.
+2016-12-05 17:00:37,414 - master.clEND - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,416 - db.DB - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,419 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,419 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,420 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,421 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,421 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,422 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,423 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,423 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,423 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,424 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,424 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,425 - worker.Worker - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,428 - coord.Coord - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,428 - coord.Coord - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,428 - coord.Coord - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,429 - coord.Coord - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,429 - coord.Coord - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,430 - coord.Coord - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,432 - master.Client - DEBUG - `start` command received, commencing...
+2016-12-05 17:00:37,435 - coord.Coord - OUTPUT - Request received at  1  coordinator, which is subject coordinator: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,436 - coord.Coord - OUTPUT - Start waiting before proceeding to work: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,436 - coord.Coord - OUTPUT - Request received at  1  coordinator, which is subject coordinator: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,436 - coord.Coord - OUTPUT - Stop waiting before proceeding to work: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,438 - coord.Coord - OUTPUT - Start waiting before proceeding to work: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,438 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  1  AFTER 1ST ARRIVAL OF REQ WITH Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:1:ATTRIBUTE:history:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]
+2016-12-05 17:00:37,440 - coord.Coord - OUTPUT - Stop waiting before proceeding to work: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,440 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  1  AFTER 1ST ARRIVAL OF REQ WITH Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:2:ATTRIBUTE:history:VERSION: RTS:0,WTS:0,PMR:[253527364452587808642039540439843927683],PMW:[]ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[253527364452587808642039540439843927683],PMW:[]
+2016-12-05 17:00:37,442 - coord.Coord - OUTPUT - Request received at  2  coordinator, which is resource coordinator: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,444 - coord.Coord - OUTPUT - Start waiting before proceeding to work: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,444 - coord.Coord - OUTPUT - Stop waiting before proceeding to work: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,445 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  2  AFTER 1ST ARRIVAL OF REQ WITH Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:name:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:count:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]
+2016-12-05 17:00:37,447 - coord.Coord - OUTPUT - Request received at  2  coordinator, which is resource coordinator: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,447 - coord.Coord - OUTPUT - Start waiting before proceeding to work: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,448 - coord.Coord - OUTPUT - Stop waiting before proceeding to work: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,448 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  2  AFTER 1ST ARRIVAL OF REQ WITH Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295, 253527364452587808642039540439843927683],PMW:[]ATTRIBUTE:name:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295, 253527364452587808642039540439843927683],PMW:[]ATTRIBUTE:count:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295, 253527364452587808642039540439843927683],PMW:[]
+2016-12-05 17:00:37,449 - worker.Worker - OUTPUT - Request received by worker: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,451 - worker.Worker - OUTPUT - Proceeding to Work: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,451 - worker.Worker - OUTPUT - READ FROM DB:  ['history', 'type', 'history']
+2016-12-05 17:00:37,451 - worker.Worker - OUTPUT - Request received by worker: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,452 - worker.Worker - OUTPUT - READ FROM DB:  ['type', 'name']
+2016-12-05 17:00:37,452 - worker.Worker - OUTPUT - Sending Read to Db: %s 1480975237.43637201
+2016-12-05 17:00:37,453 - worker.Worker - OUTPUT - Proceeding to Work: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {}
+ReadAttr Obj2: {}
+updatedObj: -1
+rdOnlyObj: -1
+updates: []
+decision: None
+
+2016-12-05 17:00:37,453 - worker.Worker - OUTPUT - READ FROM DB:  ['history', 'type', 'history']
+2016-12-05 17:00:37,453 - worker.Worker - OUTPUT - READ FROM DB:  ['type', 'name']
+2016-12-05 17:00:37,454 - worker.Worker - OUTPUT - Sending Read to Db: %s 1480975237.43803601
+2016-12-05 17:00:37,454 - db.DB - OUTPUT - DB received request: %s 1480975237.43637201
+2016-12-05 17:00:37,456 - worker.Worker - OUTPUT - Received response from Db: %s 1480975237.43637201
+2016-12-05 17:00:37,456 - db.DB - OUTPUT - DB received request: %s 1480975237.43803601
+2016-12-05 17:00:37,456 - worker.Worker - OUTPUT - Sending Read to Db: %s 1480975237.43637202
+2016-12-05 17:00:37,458 - worker.Worker - OUTPUT - Received response from Db: %s 1480975237.43803601
+2016-12-05 17:00:37,458 - db.DB - OUTPUT - DB received request: %s 1480975237.43637202
+2016-12-05 17:00:37,458 - worker.Worker - OUTPUT - Sending Read to Db: %s 1480975237.43803602
+2016-12-05 17:00:37,459 - worker.Worker - OUTPUT - Received response from Db: %s 1480975237.43637202
+2016-12-05 17:00:37,460 - db.DB - OUTPUT - DB received request: %s 1480975237.43803602
+2016-12-05 17:00:37,460 - worker.Worker - OUTPUT - READ FROM DB:  ['history', 'type']
+2016-12-05 17:00:37,460 - worker.Worker - OUTPUT - READ FROM DB:  ['type', 'name', 'count', 'count']
+2016-12-05 17:00:37,461 - worker.Worker - OUTPUT - Sending Read to Db: %s 1480975237.43637211
+2016-12-05 17:00:37,461 - worker.Worker - OUTPUT - Received response from Db: %s 1480975237.43803602
+2016-12-05 17:00:37,462 - db.DB - OUTPUT - DB received request: %s 1480975237.43637211
+2016-12-05 17:00:37,463 - worker.Worker - OUTPUT - Received response from Db: %s 1480975237.43637211
+2016-12-05 17:00:37,464 - worker.Worker - OUTPUT - Sending Read to Db: %s 1480975237.43637212
+2016-12-05 17:00:37,465 - db.DB - OUTPUT - DB received request: %s 1480975237.43637212
+2016-12-05 17:00:37,466 - worker.Worker - OUTPUT - Received response from Db: %s 1480975237.43637212
+2016-12-05 17:00:37,467 - worker.Worker - OUTPUT - Result after evaluating %s rule/s: %s 1 Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x103187550>, 'type': <common.Versions object at 0x10239e7b8>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x10239e1d0>, 'name': <common.Versions object at 0x10239ee10>, 'count': <common.Versions object at 0x10239eeb8>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:37,469 - coord.Coord - OUTPUT - Entering CACHE: %s and Results: %s {257: {'type': [<common.Versions object at 0x102394748>], 'name': [<common.Versions object at 0x102394b38>], 'count': [<common.Versions object at 0x102394860>]}} Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10317acc0>, 'type': <common.Versions object at 0x102394828>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394b70>, 'count': <common.Versions object at 0x102394a58>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:37,470 - coord.Coord - OUTPUT - Result received at  2  coordinator, which is resource coordinator: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10317acc0>, 'type': <common.Versions object at 0x102394828>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394b70>, 'count': <common.Versions object at 0x102394a58>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:37,470 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  2  AFTER 2ND ARRIVAL (BEFORE WAIT) OF REQ WITH Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295, 253527364452587808642039540439843927683],PMW:[]ATTRIBUTE:name:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295, 253527364452587808642039540439843927683],PMW:[]ATTRIBUTE:count:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295, 253527364452587808642039540439843927683],PMW:[]
+2016-12-05 17:00:37,471 - coord.Coord - OUTPUT - In checkForConflict: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10317acc0>, 'type': <common.Versions object at 0x102394828>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394b70>, 'count': <common.Versions object at 0x102394a58>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:37,471 - coord.Coord - OUTPUT - Version: %s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295, 253527364452587808642039540439843927683]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,464 - worker.Worker - DEBUG - __process_event: message was stolen by another thread.
+2016-12-05 17:00:42,465 - worker.Worker - OUTPUT - Result after evaluating %s rule/s: %s 0 Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394eb8>, 'type': <common.Versions object at 0x1023a05f8>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394a20>, 'name': <common.Versions object at 0x102394a90>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,468 - coord.Coord - OUTPUT - Entering CACHE: %s and Results: %s {2: {'history': [<common.Versions object at 0x102394898>], 'type': [<common.Versions object at 0x102394a90>]}} Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394ac8>, 'type': <common.Versions object at 0x102394c50>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394828>, 'name': <common.Versions object at 0x102394da0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,469 - coord.Coord - OUTPUT - Result received at  1  coordinator, which is subject coordinator: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394ac8>, 'type': <common.Versions object at 0x102394c50>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394828>, 'name': <common.Versions object at 0x102394da0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,470 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  1  AFTER 2ND ARRIVAL (BEFORE WAIT) OF REQ WITH Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:2:ATTRIBUTE:history:VERSION: RTS:0,WTS:0,PMR:[253527364452587808642039540439843927683],PMW:[]ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[253527364452587808642039540439843927683],PMW:[]
+2016-12-05 17:00:42,470 - coord.Coord - OUTPUT - In checkForConflict: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394ac8>, 'type': <common.Versions object at 0x102394c50>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394828>, 'name': <common.Versions object at 0x102394da0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,471 - coord.Coord - OUTPUT - Version: %s rts: 0
+wts: 0
+value: None
+pendingMightRead: [253527364452587808642039540439843927683]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,472 - coord.Coord - OUTPUT - In checkForConflict: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394ac8>, 'type': <common.Versions object at 0x102394c50>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394828>, 'name': <common.Versions object at 0x102394da0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,472 - coord.Coord - OUTPUT - Version: %s rts: 0
+wts: 0
+value: None
+pendingMightRead: [253527364452587808642039540439843927683]
+pendingMightWrite: [253527364452587808642039540439843927683]
+
+2016-12-05 17:00:42,473 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  1  AFTER 2ND ARRIVAL (AFTER WAIT) OF REQ WITH Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:2:ATTRIBUTE:history:VERSION: RTS:0,WTS:0,PMR:[253527364452587808642039540439843927683],PMW:[253527364452587808642039540439843927683]ATTRIBUTE:type:VERSION: RTS:0,WTS:0,PMR:[253527364452587808642039540439843927683],PMW:[]
+2016-12-05 17:00:42,474 - coord.Coord - OUTPUT - Updating to CACHE in Result version: %s rts: 1480975237.438036
+wts: 1480975237.438036
+value: BankA
+pendingMightRead: []
+pendingMightWrite: []
+
+2016-12-05 17:00:42,475 - coord.Coord - OUTPUT - No conflict:  rts: 0
+wts: 0
+value: None
+pendingMightRead: [253527364452587808642039540439843927683]
+pendingMightWrite: [253527364452587808642039540439843927683]
+
+2016-12-05 17:00:42,476 - coord.Coord - OUTPUT - No conflict:  rts: 0
+wts: 0
+value: None
+pendingMightRead: [253527364452587808642039540439843927683]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,476 - coord.Coord - OUTPUT - REQ EVALUATION COMPLETED,SENDING RESPONSE TO CLIENT Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:2:ATTRIBUTE:history:VERSION: RTS:1480975237.438036,WTS:0,PMR:[],PMW:[253527364452587808642039540439843927683]VERSION: RTS:1480975237.438036,WTS:1480975237.438036,PMR:[],PMW:[]ATTRIBUTE:type:VERSION: RTS:1480975237.438036,WTS:0,PMR:[],PMW:[]
+2016-12-05 17:00:42,480 - master.Client - OUTPUT - Response received by Client: %s Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10318c240>, 'type': <common.Versions object at 0x10318c5f8>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x10318c160>, 'name': <common.Versions object at 0x10318c908>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,480 - coord.Coord - OUTPUT - Exiting CACHE: %s and Results: %s {2: {'history': [<common.Versions object at 0x102394898>, <common.Versions object at 0x1023948d0>], 'type': [<common.Versions object at 0x102394a90>]}} Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394ac8>, 'type': <common.Versions object at 0x102394c50>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394828>, 'name': <common.Versions object at 0x102394da0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,482 - coord.Coord - OUTPUT - Entering received a ReadAttr request for object:  2 , Request: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394da0>, 'type': <common.Versions object at 0x102394c18>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x1023949b0>, 'name': <common.Versions object at 0x1031879b0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,482 - coord.Coord - OUTPUT - Entering received a ReadAttr request for object:  1 , Request: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394a20>, 'type': <common.Versions object at 0x102394d30>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394da0>, 'name': <common.Versions object at 0x102394828>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,483 - coord.Coord - OUTPUT - ReadAttr mightRead :%s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295, 253527364452587808642039540439843927683]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,483 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394898>, <common.Versions object at 0x1023948d0>]
+2016-12-05 17:00:42,483 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394748>]
+2016-12-05 17:00:42,484 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394a90>]
+2016-12-05 17:00:42,484 - coord.Coord - OUTPUT - ReadAttr mightRead :%s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295, 253527364452587808642039540439843927683]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,484 - coord.Coord - OUTPUT - ReadAttr mightWrite :%s rts: 1480975237.438036
+wts: 0
+value: None
+pendingMightRead: []
+pendingMightWrite: [253527364452587808642039540439843927683]
+
+2016-12-05 17:00:42,484 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394b38>]
+2016-12-05 17:00:42,485 - coord.Coord - OUTPUT - COORDINATOR CLEANING UP CHANGES on COORD  1  MADE BY COMPLETED REQ WITH Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:2:ATTRIBUTE:history:VERSION: RTS:1480975237.438036,WTS:0,PMR:[],PMW:[]VERSION: RTS:1480975237.438036,WTS:1480975237.438036,PMR:[],PMW:[]ATTRIBUTE:type:VERSION: RTS:1480975237.438036,WTS:0,PMR:[],PMW:[]
+2016-12-05 17:00:42,485 - coord.Coord - OUTPUT - ReadAttr mightRead :%s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295, 253527364452587808642039540439843927683]
+pendingMightWrite: [327733564090996333155990455850058057295]
+
+2016-12-05 17:00:42,485 - coord.Coord - OUTPUT - Exiting received a ReadAttr request for object:  1 , Request: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394a20>, 'type': <common.Versions object at 0x102394d30>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394da0>, 'name': <common.Versions object at 0x102394828>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,486 - coord.Coord - OUTPUT - COORDINATOR CLEANING UP CHANGES on COORD  2  MADE BY COMPLETED REQ WITH Req._ID: 2 Req.ts: 1480975237.438036 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:1480975237.438036,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:name:VERSION: RTS:1480975237.438036,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:count:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[327733564090996333155990455850058057295]
+2016-12-05 17:00:42,486 - coord.Coord - OUTPUT - Exiting received a ReadAttr request for object:  2 , Request: Req _ID: 2
+Req ID: 253527364452587808642039540439843927683
+Subject:
+   Obj ID: 2
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394da0>, 'type': <common.Versions object at 0x102394c18>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x1023949b0>, 'name': <common.Versions object at 0x1031879b0>}
+updatedObj: 1
+rdOnlyObj: 2
+updates: {'history': 'BankA'}
+decision: permit
+
+2016-12-05 17:00:42,487 - coord.Coord - OUTPUT - In checkForConflict: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10317acc0>, 'type': <common.Versions object at 0x102394828>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394b70>, 'count': <common.Versions object at 0x102394a58>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,488 - coord.Coord - OUTPUT - Version: %s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295]
+pendingMightWrite: [327733564090996333155990455850058057295]
+
+2016-12-05 17:00:42,488 - coord.Coord - OUTPUT - CACHE CONTENT ON COORD  2  AFTER 2ND ARRIVAL (AFTER WAIT) OF REQ WITH Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:1480975237.438036,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:name:VERSION: RTS:1480975237.438036,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[]ATTRIBUTE:count:VERSION: RTS:0,WTS:0,PMR:[327733564090996333155990455850058057295],PMW:[327733564090996333155990455850058057295]
+2016-12-05 17:00:42,489 - coord.Coord - OUTPUT - Updating to CACHE in Result version: %s rts: 1480975237.436372
+wts: 1480975237.436372
+value: 1
+pendingMightRead: []
+pendingMightWrite: []
+
+2016-12-05 17:00:42,490 - coord.Coord - OUTPUT - No conflict:  rts: 1480975237.438036
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,491 - coord.Coord - OUTPUT - No conflict:  rts: 1480975237.438036
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,491 - coord.Coord - OUTPUT - No conflict:  rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295]
+pendingMightWrite: [327733564090996333155990455850058057295]
+
+2016-12-05 17:00:42,492 - coord.Coord - OUTPUT - REQ EVALUATION COMPLETED,SENDING RESPONSE TO CLIENT Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]ATTRIBUTE:name:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]ATTRIBUTE:count:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[327733564090996333155990455850058057295]VERSION: RTS:1480975237.436372,WTS:1480975237.436372,PMR:[],PMW:[]
+2016-12-05 17:00:42,496 - master.Client - OUTPUT - Response received by Client: %s Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10318cd30>, 'type': <common.Versions object at 0x10318c518>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x10318c208>, 'name': <common.Versions object at 0x10318cd68>, 'count': <common.Versions object at 0x1031940b8>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,496 - coord.Coord - OUTPUT - Exiting CACHE: %s and Results: %s {257: {'type': [<common.Versions object at 0x102394748>], 'name': [<common.Versions object at 0x102394b38>], 'count': [<common.Versions object at 0x102394860>, <common.Versions object at 0x10317ae10>]}} Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x10317acc0>, 'type': <common.Versions object at 0x102394828>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394b70>, 'count': <common.Versions object at 0x102394a58>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,497 - master.Client - OUTPUT - client exiting
+2016-12-05 17:00:42,498 - coord.Coord - OUTPUT - Entering received a ReadAttr request for object:  1 , Request: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x1023947f0>, 'type': <common.Versions object at 0x102394978>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394f98>, 'name': <common.Versions object at 0x102394f28>, 'count': <common.Versions object at 0x102394a90>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,498 - coord.Coord - OUTPUT - ReadAttr mightRead :%s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,499 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x1023945c0>]
+2016-12-05 17:00:42,500 - coord.Coord - OUTPUT - ReadAttr mightRead :%s rts: 0
+wts: 0
+value: None
+pendingMightRead: [327733564090996333155990455850058057295]
+pendingMightWrite: []
+
+2016-12-05 17:00:42,500 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x1023947b8>]
+2016-12-05 17:00:42,501 - coord.Coord - OUTPUT - COORDINATOR CLEANING UP CHANGES on COORD  1  MADE BY COMPLETED REQ WITH Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:1:ATTRIBUTE:history:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]ATTRIBUTE:type:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]
+2016-12-05 17:00:42,501 - coord.Coord - OUTPUT - Exiting received a ReadAttr request for object:  1 , Request: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x1023947f0>, 'type': <common.Versions object at 0x102394978>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394f98>, 'name': <common.Versions object at 0x102394f28>, 'count': <common.Versions object at 0x102394a90>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,503 - db.DB - OUTPUT - ----------------DATABASE CONTENT----------------
+2016-12-05 17:00:42,505 - db.DB - OUTPUT - OBJECT 1:=ATTRIBUTE history:VERSION wts=1480975237.417824 value=BankA,ATTRIBUTE type:VERSION wts=1480975237.417824 value=employee,ATTRIBUTE name:VERSION wts=1480975237.417824 value=Tom,OBJECT 2:=ATTRIBUTE history:VERSION wts=1480975237.417824 value=,VERSION wts=1480975237.438036 value=BankA,ATTRIBUTE type:VERSION wts=1480975237.417824 value=employee,ATTRIBUTE name:VERSION wts=1480975237.417824 value=Jack,OBJECT 3:=ATTRIBUTE history:VERSION wts=1480975237.417824 value=BankB,ATTRIBUTE type:VERSION wts=1480975237.417824 value=employee,ATTRIBUTE name:VERSION wts=1480975237.417824 value=Sahil,OBJECT 258:=ATTRIBUTE type:VERSION wts=1480975237.417824 value=bank,ATTRIBUTE name:VERSION wts=1480975237.417824 value=BankB,ATTRIBUTE count:VERSION wts=1480975237.417824 value=1,OBJECT 257:=ATTRIBUTE type:VERSION wts=1480975237.417824 value=bank,ATTRIBUTE name:VERSION wts=1480975237.417824 value=BankA,ATTRIBUTE count:VERSION wts=1480975237.417824 value=0,VERSION wts=1480975237.436372 value=1,
+2016-12-05 17:00:42,505 - db.DB - OUTPUT - ------------------------------------------------
+2016-12-05 17:00:42,506 - db.DB - OUTPUT - Database process exiting...
+2016-12-05 17:00:42,499 - coord.Coord - OUTPUT - Entering received a ReadAttr request for object:  2 , Request: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394a20>, 'type': <common.Versions object at 0x102394b70>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394828>, 'count': <common.Versions object at 0x10317ae48>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,508 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394748>]
+2016-12-05 17:00:42,509 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394b38>]
+2016-12-05 17:00:42,509 - coord.Coord - OUTPUT - BEFORE UPDATION: [<common.Versions object at 0x102394860>, <common.Versions object at 0x10317ae10>]
+2016-12-05 17:00:42,510 - coord.Coord - OUTPUT - ReadAttr mightWrite :%s rts: 1480975237.436372
+wts: 0
+value: None
+pendingMightRead: []
+pendingMightWrite: [327733564090996333155990455850058057295]
+
+2016-12-05 17:00:42,510 - coord.Coord - OUTPUT - Coordinator Exiting...
+2016-12-05 17:00:42,510 - coord.Coord - OUTPUT - COORDINATOR CLEANING UP CHANGES on COORD  2  MADE BY COMPLETED REQ WITH Req._ID: 1 Req.ts: 1480975237.436372 , OBJECT:257:ATTRIBUTE:type:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]ATTRIBUTE:name:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]ATTRIBUTE:count:VERSION: RTS:1480975237.436372,WTS:0,PMR:[],PMW:[]VERSION: RTS:1480975237.436372,WTS:1480975237.436372,PMR:[],PMW:[]
+2016-12-05 17:00:42,511 - coord.Coord - OUTPUT - Exiting received a ReadAttr request for object:  2 , Request: Req _ID: 1
+Req ID: 327733564090996333155990455850058057295
+Subject:
+   Obj ID: 1
+   Obj type: employee
+Resource:
+   Obj ID: 257
+   Obj type: bank
+action: read
+ReadAttr Obj1: {'history': <common.Versions object at 0x102394a20>, 'type': <common.Versions object at 0x102394b70>}
+ReadAttr Obj2: {'type': <common.Versions object at 0x102394d68>, 'name': <common.Versions object at 0x102394828>, 'count': <common.Versions object at 0x10317ae48>}
+updatedObj: 2
+rdOnlyObj: 1
+updates: {'count': 1}
+decision: permit
+
+2016-12-05 17:00:42,512 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,514 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,516 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,517 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,517 - coord.Coord - OUTPUT - Coordinator Exiting...
+2016-12-05 17:00:42,517 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,520 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,520 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,520 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,521 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,523 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,525 - coord.Coord - OUTPUT - Coordinator Exiting...
+2016-12-05 17:00:42,525 - coord.Coord - OUTPUT - Coordinator Exiting...
+2016-12-05 17:00:42,530 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,523 - coord.Coord - OUTPUT - Coordinator Exiting...
+2016-12-05 17:00:42,528 - worker.Worker - OUTPUT - Worker exiting...
+2016-12-05 17:00:42,534 - coord.Coord - OUTPUT - Coordinator Exiting...

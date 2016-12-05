@@ -1,0 +1,2 @@
+Number of Requests:1000, mean: 0.0130760102272, standard deviation: 0.00232778383385
+Number of Requests:1000, mean: 0.0134236502647, standard deviation: 0.00248955981381
