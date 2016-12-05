@@ -219,7 +219,7 @@ class Coord(process):
                 if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightWrite:
                     latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
-            timeout = 120 * random.random()
+            timeout = random.randrange(10,20)
 
             if await(condition(x, req)):
                 conflict = checkForConflicts(x, req)

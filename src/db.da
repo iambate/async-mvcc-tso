@@ -31,11 +31,12 @@ class DB(process):
                         reply[attr] = commonpy.max_version(list(v for v in self.database[obj.id][attr] if v.wts < ts))
             send(('ReadDbResponse', unique_db_req, reply), to=p)
     #updates are of format : {attr1:}
-    def receive(msg=("UpdateDatabase",obj,updates,ts), from_=p): 
+    def receive(msg=("UpdateDatabase",obj,updates,ts), from_=p):
         for attr in updates:
             if attr not in self.database[obj]:
                 self.database[obj][attr] = []
             self.database[obj][attr].append(common.Versions(wts=ts, value= updates[attr]))
+            #output("GARGI ",obj, attr, self.database[obj][attr][0].value)
         
 
     def receive(msg=("Done")):

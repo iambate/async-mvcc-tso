@@ -16,10 +16,11 @@ class Result:
         self.updates = updates          # {attr1: value1, attr2: value2, ..]
 
 def apply_Operation(old_val_of_attr,operation):
+    #output("")
     if operation == '++':
-        old_val_of_attr =int(old_val_of_attr) + 1
+        return int(old_val_of_attr) + 1
     elif operation == "--":
-        old_val_of_attr = int(old_val_of_attr)  - 1
+        return int(old_val_of_attr) + 1
     else:
         return operation
     

@@ -14,7 +14,7 @@ coord = import_da("coord")
 common = import_da("common")
 
 class Client(process):
-    def setup(coords_list, dbs, workers_list, requestNo):
+    def setup(coords_list, end_all_proc, requestNo):
         self.logger = logging.getLogger(__name__)
 
         #output("client process w:",workers_list)
@@ -51,11 +51,20 @@ class Client(process):
 
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))
-        send(('Done'), to = list(set(self.workers_list) | set(self.coords_list) | set(self.dbs)))
+        send(('END'), to = end_all_proc)
         output("client exiting")
 
     def receive(msg=('Response', response)):
         output("Response received by Client: %s",str(response))
+
+class clEND(process):
+    def setup(coords,dbs,workers,clients):
+        pass
+
+    def run():
+        await(len(listof(p, received(('END'), from_ = p))) == len(clients))
+        send(('Done'), to = list(set(self.coords) |set(self.dbs) | set(self.workers)))
+        return
 
 
 def main():
@@ -75,25 +84,22 @@ def main():
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
-    clients = new(Client, num = 1)
+    clients = new(Client, num = 2)
     coords = new(coord.Coord, num = 6)
     workers = new(worker.Worker, num = 12)
     dbs = new(db.DB, num = 1)
+    end_all_proc = new(clEND,num = 1)
 
+    setup(end_all_proc,(list(coords), list(dbs), list(workers), list(clients)))
     setup(dbs, (requestNo,))
     setup(workers, (list(coords), list(dbs), requestNo))
     setup(coords, (list(coords), list(workers), list(dbs), requestNo))
-    setup(clients, (list(coords), list(dbs), list(workers), requestNo))
+    setup(clients, (list(coords), end_all_proc, requestNo))
 
+    start(end_all_proc)
     start(dbs)
     start(workers)
     start(coords)
     start(clients)
 
-    #output("main process w:",workers)
-    #output("main process c:",coords)
-    #output("main process d:",dbs)
-    #for c in clients: c.join()
 
-    # Terminate the process
-    #send(('Done'), to = (workers | coords | dbs))

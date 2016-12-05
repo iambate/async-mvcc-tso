@@ -26,6 +26,8 @@ from config import database6
 from config import requests7
 from config import database7
 
+from config import requests21
+from config import database21
 class conf:
     def __init__(self):
         self.database = None
@@ -94,3 +96,12 @@ c7.minDBlatency = 1
 c7.maxDBlatency = 5
 c7.requests = requests7.requests
 cnfg[7]=c7
+
+#single request for tracing
+c21 = conf()
+c21.database = database21.attribute_db
+c21.policy = "policy-example21.xml"
+c21.minDBlatency = 1
+c21.maxDBlatency = 5
+c21.requests = requests21.requests
+cnfg[21]=c21
