@@ -77,6 +77,10 @@ class Coord(process):
 
     def receive(msg=('Request', req, n), from_=p):
         x = common.obj(req,n)
+        if x == req.subject:
+            output("Request received at ", n , " coordinator, which is subject coordinator:", req)
+        else:
+            output("Request received at ", n , " coordinator, which is resource coordinator:", req)
         if n == 1:
             req.ts = common.now()
         tobeRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
@@ -195,6 +199,10 @@ class Coord(process):
         if req.ts < self.sessionID:
             return
         x = common.obj(req,req.updatedObj)
+        if x == req.subject:
+            output("Result received at ", req.updatedObj , " coordinator, which is subject coordinator:", req)
+        else:
+            output("Result received at ", req.updatedObj , " coordinator, which is resource coordinator:", req)
         conflict = checkForConflicts(x, req)
 
         if conflict == False:
@@ -202,7 +210,7 @@ class Coord(process):
                 if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightWrite:
                     latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
 
-            timeout = 2 * random.random()
+            timeout = 120 * random.random()
 
             if await(condition(x, req)):
                 conflict = checkForConflicts(x, req)
