@@ -2,14 +2,14 @@ INSTRUCTIONS:
 ------------
 Version of Distalgo used: 1.0.4(the latest)
 Assuming you have unzipped the folder and your current directory is within the unzipped folder, the code can be run as:
-python3 -m da [--message-buffer-size=$((20*1024))] src/master.da <test-case-number> &> <file to accumulate logs in>
+python3 -m da [--message-buffer-size=$((64*1024))] src/master.da <test-case-number> &> <file to accumulate logs in>
 The elements in [ ] are optional and the ones in < > are variables that depend on the test case being run.
 The valid test case numbers have been defined in TESTING.txt and the output file to store logs in can be any file of your choice.
 
-"--message-buffer-size=$((20*1024))" increases the size of the buffer to 20KB in order to avoid "MessageTooBig" exception but it can be any other value.
+"--message-buffer-size=$((64*1024))" increases the size of the buffer to 64 KB in order to avoid "MessageTooBig" exception but it can be any other value.
 
 example:
-python3 -m da src/master.da 21 &> output21
+python3 -m da --message-buffer-size=$((64*1024)) src/master.da 21 &> output21
 that runs test case number 21 and stores log files in output21.
 
 
