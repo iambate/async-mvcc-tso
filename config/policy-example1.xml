@@ -12,8 +12,9 @@
 
   <rule name="access bank A again">
     <subjectCondition type="employee" history="BankA"></subjectCondition>
-    <resourceCondition type="bank" name="BankA"></resourceCondition>
+    <resourceCondition type="bank" name="BankA" count="&lt;4"></resourceCondition>
     <action name="read"></action>
+    <resourceUpdate count="++"></resourceUpdate>
   </rule>
 
   <rule name="access bank B first time">
@@ -25,8 +26,9 @@
 
   <rule name="access bank B again">
     <subjectCondition type="employee" history="BankB"></subjectCondition>
-    <resourceCondition type="bank" name="BankB"></resourceCondition>
+    <resourceCondition type="bank" name="BankB" count="&lt;4"></resourceCondition>
     <action name="read"></action>
+    <resourceUpdate count="++"></resourceUpdate>
   </rule>
 
   <rule name="customers collectively can view each movie at most 5 times">
