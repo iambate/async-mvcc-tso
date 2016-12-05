@@ -7,7 +7,7 @@ requests = {
                 "restype": "bank",
                 "action": "read",
                 "client_wait"  : 0,
-                "worker_wait"  : 2
+                "worker_wait"  : 5
             }
         ,
         2:
