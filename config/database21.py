@@ -16,13 +16,15 @@ attribute_db = {
         257:
             {
                 "name": "BankA",
-                "type" : "bank"
+                "type" : "bank",
+		"count" : 0
             }
         ,
         258:
             {
                 "name": "BankB",
-                "type" : "bank"
+                "type" : "bank",
+		"count" : 0
             }
         ,
         3:

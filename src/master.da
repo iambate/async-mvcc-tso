@@ -84,7 +84,7 @@ def main():
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
-    clients = new(Client, num = 2)
+    clients = new(Client, num = 1)
     coords = new(coord.Coord, num = 6)
     workers = new(worker.Worker, num = 12)
     dbs = new(db.DB, num = 1)

@@ -36,7 +36,6 @@ class DB(process):
             if attr not in self.database[obj]:
                 self.database[obj][attr] = []
             self.database[obj][attr].append(common.Versions(wts=ts, value= updates[attr]))
-            #output("GARGI ",obj, attr, self.database[obj][attr][0].value)
         
 
     def receive(msg=("Done")):
@@ -54,6 +53,7 @@ class DB(process):
                 content+=":"
                 #output(attr,":")
                 for versions in self.database[obj][attr]:
+                    content+="VERSION "
                     content+="wts="
                     content+=str(versions.wts)
                     content+=" value="

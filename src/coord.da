@@ -240,7 +240,8 @@ class Coord(process):
             output("CACHE CONTENT ON COORD ", req.updatedObj, " AFTER 2ND ARRIVAL (AFTER WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
 
             if not conflict:
-                send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])
+                x = common.obj(req,req.updatedObj)
+                send(("UpdateDatabase",x.id,req.updates,req.ts),to=dbs_list[0])
                 for attr in req.updates.keys():
                     v = common.Versions(req.ts,req.ts,req.updates[attr])
                     self._CACHE[x.id][attr].append(v)
