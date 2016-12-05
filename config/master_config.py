@@ -32,6 +32,8 @@ from config import database8
 from config import requests21
 from config import database21
 
+from config import requests22
+from config import database22
 class conf:
     def __init__(self):
         self.database = None
@@ -120,3 +122,11 @@ c21.minDBlatency = 1
 c21.maxDBlatency = 5
 c21.requests = requests21.requests
 cnfg[21]=c21
+
+c22 = conf()
+c22.database = database22.attribute_db
+c22.policy = "policy-example22.xml"
+c22.minDBlatency = 1
+c22.maxDBlatency = 5
+c22.requests = requests22.requests
+cnfg[22]=c22

@@ -1,0 +1,48 @@
+INSTRUCTIONS:
+------------
+Version of Distalgo used: 1.0.4(the latest)
+Assuming you have unzipped the folder and your current directory is within the unzipped folder, the code can be run as:
+python3 -m da [--message-buffer-size=$((20*1024))] src/master.da <test-case-number> &> <file to accumulate logs in>
+The elements in [ ] are optional and the ones in < > are variables that depend on the test case being run.
+The valid test case numbers have been defined in TESTING.txt and the output file to store logs in can be any file of your choice.
+
+"--message-buffer-size=$((20*1024))" increases the size of the buffer to 20KB in order to avoid "MessageTooBig" exception but it can be any other value.
+
+example:
+python3 -m da src/master.da 21 &> output21
+that runs test case number 21 and stores log files in output21.
+
+
+MAIN FILES:
+----------
+1) src folder contains all the source files namely:
+master.da :The main process that initializes and starts other processes, the client code also resides in the same file. The main process ensures successful termination of all processes once the client has received the expected number of responses. Due to join not being a supported operation in thsi version of DistAlgo, we have another process called ClEnd that takes care of termination.
+	
+db.da: Contains the database process that is responsible for taking update database requests and responding to read database requests.
+
+worker.da: Source code for worker and some of the common functions used by the worker.
+
+coord.da: Source code for coordinator and some of the common functions used by the worker such as latestVersionBefore and cachedUpdates.
+
+2) config folder:
+it contains all out test cases- the requests to be run for each test case, the initial content of the database and the policy files.
+
+3) pseudocode folder:
+Contains the pseudo code that was submitted as part of phase 3.
+
+4) log folder:
+Contains log files corresponding to all test cases, numbered according to the test case that was run to obtain those logs.
+
+POINTS TO NOTE:
+--------------
+In order to prevent deadlocks, we have used a timer that times out after a random interval of time if the condition for await (that is to wait for pendingMightRead list of all attributes that are to be updated by this request to empty out) is not true by then. If a request is restarted once, when it arrives at its write coordinator for the second time, we place it in the pendingMightWrite list of its mightWriteAttr arribute list as a restarted request has high probability of being a write request, and  every incoming request that wants to read that attribute will have to wait. There will be no scenario as per our  design wherein a read or write request will starve.
+
+
+Every time a coordinator starts up, it marks the beginning of a session using a timestamp. If a write request arrives from the worker with a timestamp lower than the current session's timestamp, then we do nothing and allow the client to time out.
+
+
+CONTRIBUTIONS:
+-------------
+Sagar Shah(110958554): Designed pseudo code, helped develop the modules for 
+
+Gargi Saha(110923743):

@@ -1,6 +1,0 @@
-
-Figure out why REadtimestamp is not updating
-
-Why type has incorrrect mightReadAttr after CACHE update(not sure)?
-
-REMOVE time.sleep from master.da before sending requests to client
