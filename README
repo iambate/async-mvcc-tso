@@ -43,6 +43,6 @@ Every time a coordinator starts up, it marks the beginning of a session using a 
 
 CONTRIBUTIONS:
 -------------
-Sagar Shah(110958554): Designed pseudo code, helped develop the modules for 
+The modules were designed jointly but the work was split when it came to coding each module.Sagar Shah took care of the coordinator, database while Gargi Saha took care of the worker and client. Testing was done by designing each test case one by one and running them. In case of unexpected results, the person who designed the test case was responsible for figuring out the reason behind getting unexpected output and then resolving the issue. There was a 50-50 split in this effort.
 
-Gargi Saha(110923743):
+
