@@ -189,7 +189,9 @@ class Worker(process):
         '''
         wait if in request
         '''
-        if "worker_wait" in conf.cnfg[self.requestNo].requests[R._id]: time.sleep(conf.cnfg[self.requestNo].requests[R._id]["worker_wait"])
+        if "worker_wait" in conf.cnfg[self.requestNo].requests[R._id]:
+            if await(False): pass
+            elif timeout(conf.cnfg[self.requestNo].requests[R._id]["worker_wait"]): pass
 
         if result.decision == None:
             R.decision = 'deny'

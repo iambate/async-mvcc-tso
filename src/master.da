@@ -39,11 +39,15 @@ class Client(process):
                 req.objects.append(obj1)
                 req.objects.append(obj2)
                 req._id = int(i)
+                # Uncomment this when running stress tests
+                # req.id = int(i)
 
                 '''
                 wait if in request
                 '''
-                if "client_wait" in requests[i]: time.sleep(requests[i]["client_wait"])
+                if "client_wait" in requests[i]:
+                    if await(False): pass
+                    elif timeout(requests[i]["client_wait"]): pass
 
                 send(('Request', req, 1), to = common.coord(common.obj(req, 1), coords_list))
         await(len(listof(p, received(('Response', _), from_ = p))) == len(requests))

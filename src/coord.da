@@ -117,7 +117,7 @@ class Coord(process):
                 if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightRead:
                     latestVersionBefore(x, attr, req.ts).pendingMightRead.append(req.id)
         if req.restarted == True:
-            output("Restarted Request gets Priority")
+            output("Restarted Request gets Priority on COORD", n)
             for attr in common.mightWriteAttr(x, req):
                 if req.id not in latestVersionBefore(x, attr, req.ts).pendingMightWrite:
                     latestVersionBefore(x, attr, req.ts).pendingMightWrite.append(req.id)
@@ -133,23 +133,23 @@ class Coord(process):
                 print_cache+="ATTRIBUTE:"+j +":"
                 for k in self._CACHE[i][j]:
                     print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
-        output("CACHE CONTENT AFTER 1ST ARRIVAL OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+        output("CACHE CONTENT ON COORD ", n, " AFTER 1ST ARRIVAL OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
 
         req.cachedUpdates[n] = cachedUpdates(x, req)
         if n == 1:
             send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
         else:
-            send(('Request',req),to=workers_list[req._id % 2])
+            send(('Request',req),to=workers_list[req._id % len(workers_list)])
 
-    def receive(msg=('ReadAttr', req, i)):
-        output("Entering received a ReadAttr request for object: %d, Request: "+ str(req), i)
-        x = common.obj(req, i)
+    def receive(msg=('ReadAttr', req, n)):
+        output("Entering received a ReadAttr request for object: ", n, ", Request: "+ str(req))
+        x = common.obj(req, n)
         for attr in list(set(common.mightReadAttr(x, req) + common.defReadAttr(x, req))):
             v = latestVersionBefore(x, attr, req.ts)
             if req.id in v.pendingMightRead:
                 output("ReadAttr mightRead :%s", v)
                 v.pendingMightRead.remove(req.id)
-            if attr in req.readAttr[i].keys():
+            if attr in req.readAttr[n].keys():
                 output("BEFORE UPDATION:", self._CACHE[x.id][attr])
                 if v.rts < req.ts:
                     v.rts = req.ts
@@ -169,9 +169,9 @@ class Coord(process):
                 print_cache+="ATTRIBUTE:"+j +":"
                 for k in self._CACHE[i][j]:
                     print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
-        output("COORDINATOR CLEANING UP CHANGES MADE BY COMPLETED REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+        output("COORDINATOR CLEANING UP CHANGES on COORD ", n," MADE BY COMPLETED REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
         
-        output("Exiting received a ReadAttr request for object: %d, Request: "+ str(req), i)
+        output("Exiting received a ReadAttr request for object: ", n, ", Request: "+ str(req))
 
     def checkForConflicts(x, req):
         output("In checkForConflict: %s", (req))
@@ -210,7 +210,7 @@ class Coord(process):
                 print_cache+="ATTRIBUTE:"+j +":"
                 for k in self._CACHE[i][j]:
                     print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
-        output("CACHE CONTENT AFTER 2ND ARRIVAL (BEFORE WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+        output("CACHE CONTENT ON COORD ", req.updatedObj ," AFTER 2ND ARRIVAL (BEFORE WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
 
         conflict = checkForConflicts(x, req)
 
@@ -237,7 +237,7 @@ class Coord(process):
                     print_cache+="ATTRIBUTE:"+j +":"
                     for k in self._CACHE[i][j]:
                         print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
-            output("CACHE CONTENT AFTER 2ND ARRIVAL (AFTER WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
+            output("CACHE CONTENT ON COORD ", req.updatedObj, " AFTER 2ND ARRIVAL (AFTER WAIT) OF REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
 
             if not conflict:
                 send(("UpdateDatabase",req.updatedObj,req.updates,req.ts),to=dbs_list[0])
