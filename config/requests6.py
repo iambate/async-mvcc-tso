@@ -2,16 +2,22 @@ requests = {
         1:
             {
                 "subjid": 1,
-                "resid" : 257,
+                "subjtype": "employee",
+                "resid" : 258,
+                "restype": "bank",
                 "action": "read",
-                "wait"  : 6
+                "client_wait"  : 0,
+                "worker_wait"  : 2
             }
         ,
         2:
             {
-                "subjid": 1,
+                "subjid": 3,
+                "subjtype": "employee",
                 "resid" : 258,
+                "restype": "bank",
                 "action": "read",
-                "wait"  : 1
+		"client_wait" : 0,
+                "worker_wait"  : 3
             }
 }
