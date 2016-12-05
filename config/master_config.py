@@ -33,79 +33,38 @@ class conf:
 cnfg = {}
 
 
-'''
-    Users configuration starts here
-'''
-
-# Configuration One
 c1 = conf()
 c1.database = database1.attribute_db
+c1.policy = "policy-example1.xml"
 c1.minDBlatency = 1
 c1.maxDBlatency = 5
 c1.requests = requests1.requests
 cnfg[1]=c1
 
-# Configuration Two
 c2 = conf()
 c2.database = database2.attribute_db
+c2.policy = "policy-example2.xml"
 c2.minDBlatency = 1
 c2.maxDBlatency = 5
 c2.requests = requests2.requests
 cnfg[2]=c2
 
-# Configuration Two One
-c21 = conf()
-c21.database = database2.attribute_db
-c21.policy = "policy-example2.xml"
-c21.minDBlatency = 1
-c21.maxDBlatency = 5
-c21.requests = requests21.requests
-cnfg[21]=c21
-
-# Configuration Two Two
-c22 = conf()
-c22.database = database2.attribute_db
-c22.policy = "policy-example2.xml"
-c22.minDBlatency = 1
-c22.maxDBlatency = 5
-c22.requests = requests22.requests
-cnfg[22]=c22
-
-# Configuration Two Three
-c23 = conf()
-c23.database = database2.attribute_db
-c23.policy = "policy-example2.xml"
-c23.minDBlatency = 1
-c23.maxDBlatency = 5
-c23.requests = requests23.requests
-cnfg[23]=c23
-
-# Configuration Three
 c3 = conf()
-c3.database = database2.attribute_db
+c3.database = database3.attribute_db
 c3.policy = "policy-example3.xml"
 c3.minDBlatency = 1
 c3.maxDBlatency = 5
 c3.requests = requests3.requests
 cnfg[3]=c3
 
-# Configuration Three Two
-c32 = conf()
-c32.database = database3.attribute_db
-c32.policy = "policy-example3.xml"
-c32.minDBlatency = 1
-c32.maxDBlatency = 5
-c32.requests = requests32.requests
-cnfg[32]=c32
+c4 = conf()
+c4.database = database4.attribute_db
+c4.policy = "policy-example4.xml"
+c4.minDBlatency = 1
+c4.maxDBlatency = 5
+c4.requests = requests4.requests
+cnfg[4]=c4
 
-# Configuration Three Three
-c33 = conf()
-c33.database = database3.attribute_db
-c33.policy = "policy-example3.xml"
-c33.minDBlatency = 1
-c33.maxDBlatency = 5
-c33.requests = requests33.requests
-cnfg[33]=c33
 
 # Configuration Five
 c5 = conf()
@@ -115,3 +74,21 @@ c5.minDBlatency = 1
 c5.maxDBlatency = 5
 c5.requests = requests5.requests
 cnfg[5]=c5
+
+
+c6 = conf()
+c6.database = database6.attribute_db
+c6.policy = "policy-example6.xml"
+c6.minDBlatency = 1
+c6.maxDBlatency = 5
+c6.requests = requests6.requests
+cnfg[6]=c6
+
+
+c7 = conf()
+c7.database = database7.attribute_db
+c7.policy = "policy-example7.xml"
+c7.minDBlatency = 1
+c7.maxDBlatency = 5
+c7.requests = requests7.requests
+cnfg[7]=c7

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!-- sample policy.  CSE 535, Fall 2016, Scott Stoller.  2016-10-03 -->
+<policy>
+
+  <rule name="access bank A first time">
+    <subjectCondition type="employee" history="empty"></subjectCondition>
+    <resourceCondition type="bank" name="BankA"></resourceCondition>
+    <!-- the action authorized by this rule. -->
+    <action name="read"></action>
+    <subjectUpdate history="BankA"></subjectUpdate>
+  </rule>
+
+  <rule name="access bank A again">
+    <subjectCondition type="employee" history="BankA"></subjectCondition>
+    <resourceCondition type="bank" name="BankA"></resourceCondition>
+    <action name="read"></action>
+  </rule>
+
+  <rule name="access bank B first time">
+    <subjectCondition type="employee" history="empty"></subjectCondition>
+    <resourceCondition type="bank" name="BankB"></resourceCondition>
+    <action name="read"></action>
+    <subjectUpdate history="BankB"></subjectUpdate>
+  </rule>
+
+  <rule name="access bank B again">
+    <subjectCondition type="employee" history="BankB"></subjectCondition>
+    <resourceCondition type="bank" name="BankB"></resourceCondition>
+    <action name="read"></action>
+  </rule>
+
+  <rule name="customers collectively can view each movie at most 5 times">
+    <subjectCondition type="customer"></subjectCondition>
+    <resourceCondition type="movie" viewCount="&lt;4"></resourceCondition>
+    <action name="view"></action>
+    <resourceUpdate viewCount="++"></resourceUpdate>
+  </rule>
+
+</policy>
