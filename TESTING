@@ -60,9 +60,14 @@ Test Case (5):
 -------------
 This one is supposed to be similar to (2), except the client incorrectly predicts which object is written.
 
-We have 2 requests, subj id 2 trying to access Bank A and subj id 1 trying to access Bank A. Request 1 gets delayed at the worker. Subj id 2 has an empty history while subj id 1 has Bank A in its history. Howvever, this time, the policy file is such that, for a first time access, we check if it is permitted, and if it is then we append the resource to history of the subject and for every subsequent access, we increment access count of the resource while having a condition that the count should not go above 4.
+We have 2 requests, subj id 1 trying to read Bank A's document and subj id 1 trying to write to Bank A's document. Request 1 gets delayed at the worker for 2 secs while request 2 gets delayed for 5. Subj id 1 has an empty history to begin with. The policy file we use has the following rules:
+- The subject is permitted to perform a read action on a resource only if it has an empty history or it has the same resource in its history. 
+- For a first time read, the subject's history is appended with the resource.
+- For every subsequent read, we increment rcount attribute of the resource.
+- For action write, if wcount of resource is less than 4, then we need not read the history value of the subject and allow the operation
+- However if wcount of resource is greater than 4 then we allow only those subjects to write which have previously read this resource.
 
-Since the client is unable to decide which coordinator to send the request to at first(the request might be for a first time access or an nth time access, it does not know!), be default it sends the first request to the subject coordinator, which is actually the write coordinator for request 1 since it is a first time access. pen
+Since the client is unable to decide which coordinator to send the request to at first(the request might be for a first time access or an nth time access, it does not know!), by default it sends the first request to the subject coordinator, which is actually the write coordinator for request 1 since it is a first time access. When request 1 returns from the worker, it will wait for pendingMightRead of history attribute to empty up because request 2 is in it. However, as per the initial values in the database, it turns out that count value of Bank A is less than 4 so writes to Bank A are permitted without having to read history attribute of subject to make sure Bank A is in its history. So once pendingMightread of history attribute empties out, we encounter no conflict and proceed to completion.
 
 policy file: policy-example5.xml 
 requests file: requests5.py
