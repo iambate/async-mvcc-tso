@@ -68,7 +68,7 @@ class Client(process):
         output("client exiting")
 
     def receive(msg=('Response', response)):
-        output("Response received by Client: %s",str(response))
+        output("RESPONSE received by Client: %s",str(response))
 
 class clEND(process):
     def setup(coords,dbs,workers,clients):

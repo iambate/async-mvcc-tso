@@ -78,9 +78,9 @@ class Coord(process):
     def receive(msg=('Request', req, n), from_=p):
         x = common.obj(req,n)
         if x == req.subject:
-            output("Request received at ", n , " coordinator, which is subject coordinator:", req)
+            output("START REQUEST received at ", n , " coordinator, which is subject coordinator:", req)
         else:
-            output("Request received at ", n , " coordinator, which is resource coordinator:", req)
+            output("START REQUEST received at ", n , " coordinator, which is resource coordinator:", req)
         if n == 1:
             req.ts = common.now()
         tobeRead = list(set(common.mightReadAttr(x, req)) | set(common.defReadAttr(x,req)) | set(common.mightWriteAttr(x, req)))
@@ -140,9 +140,13 @@ class Coord(process):
             send(('Request',req,2),to=common.coord(common.obj(req,2), coords_list))
         else:
             send(('Request',req),to=workers_list[req._id % len(workers_list)])
+        if x == req.subject:
+            output("EXIT REQUEST received at ", n , " coordinator, which is subject coordinator:", req)
+        else:
+            output("EXIT REQUEST received at ", n , " coordinator, which is resource coordinator:", req)
 
     def receive(msg=('ReadAttr', req, n)):
-        output("Entering received a ReadAttr request for object: ", n, ", Request: "+ str(req))
+        output("START READATTR request for object: ", n, ", Request: ", str(req))
         x = common.obj(req, n)
         for attr in list(set(common.mightReadAttr(x, req) + common.defReadAttr(x, req))):
             v = latestVersionBefore(x, attr, req.ts)
@@ -171,7 +175,7 @@ class Coord(process):
                     print_cache+="VERSION: RTS:"+str(k.rts)+",WTS:"+str(k.wts)+",PMR:"+str(k.pendingMightRead)+",PMW:"+str(k.pendingMightWrite)
         output("COORDINATOR CLEANING UP CHANGES on COORD ", n," MADE BY COMPLETED REQ WITH Req._ID:",req._id,"Req.ts:",req.ts,",",print_cache)
         
-        output("Exiting received a ReadAttr request for object: ", n, ", Request: "+ str(req))
+        output("EXIT READATTR request for object: ", n, ", Request: ", str(req))
 
     def checkForConflicts(x, req):
         output("In checkForConflict: %s", (req))
@@ -195,14 +199,13 @@ class Coord(process):
 
 
     def receive(msg=('Result',req)):
-        output("Entering CACHE: %s and Results: %s", self._CACHE, req)
         if req.ts < self.sessionID:
             return
         x = common.obj(req,req.updatedObj)
         if x == req.subject:
-            output("Result received at ", req.updatedObj , " coordinator, which is subject coordinator:", req)
+            output("START RESULT received at ", req.updatedObj , " coordinator, which is subject coordinator:", req)
         else:
-            output("Result received at ", req.updatedObj , " coordinator, which is resource coordinator:", req)
+            output("START RESULT received at ", req.updatedObj , " coordinator, which is resource coordinator:", req)
         print_cache = ""
         for i in self._CACHE:
             print_cache += "OBJECT:"+str(i)+":"
@@ -224,10 +227,13 @@ class Coord(process):
             if await(condition(x, req)):
                 conflict = checkForConflicts(x, req)
             elif timeout(timeout):
-                output("Exiting CACHE: %s and Results: %s", self._CACHE, req)
-                output("Restart Request due to timeout %s: ", req)
+                output("RESTART DUE TO TIMEOUT on coord", req.updatedObj, req)
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
+                if x == req.subject:
+                    output("EXIT RESULT received at ", req.updatedObj , " coordinator, which is subject coordinator:", req)
+                else:
+                    output("EXIT RESULT received at ", req.updatedObj , " coordinator, which is resource coordinator:", req)
                 return
  
             print_cache = ""
@@ -270,14 +276,17 @@ class Coord(process):
                 send(('ReadAttr', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('ReadAttr', req, 2), to=common.coord(common.obj(req,2), coords_list))
             else:
-                output("Restart Request due to second conflict %s: ", req)
+                output("RESTART DUE TO SECOND CONFLICT on coord", req.updatedObj, req)
                 send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
                 send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
         else:
-            output("Restart Request due to first conflict %s: ", req)
+            output("RESTART DUE TO FIRST CONFLICT on coord", req.updatedObj, req)
             send(('Restart', req, 1), to=common.coord(common.obj(req,1), coords_list))
             send(('Restart', req, 2), to=common.coord(common.obj(req,2), coords_list))
-        output("Exiting CACHE: %s and Results: %s", self._CACHE, req)
+        if x == req.subject:
+            output("EXIT RESULT received at ", req.updatedObj , " coordinator, which is subject coordinator:", req)
+        else:
+            output("EXIT RESULT received at ", req.updatedObj , " coordinator, which is resource coordinator:", req)
 
 
     def receive(msg=('Restart', req, n)):
