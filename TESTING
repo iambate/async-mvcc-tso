@@ -45,19 +45,66 @@ initial database content file: database3.py
 
 Test Case (4):
 -------------
+In this test case we demonstrate system behavior in the following case: The coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker, waits for relevant pendingMightReads to be resolved, and then detects a conflict and re-starts r.
+
+We have 2 requests -from subj id 1 accessing BankB and from subj id 3 accessing Bank B. Subj id 1 has an empty history while subj id 3 has Bank B in its history. the policy file used is the same as the one used by test case 3- we are expected to increment count attribute of Bank B for every first time customer.
+
+In this case, both requests get delayed at the worker but request 2 gets delayed for slightly longer. This way when Request 1 returns, it does not see any conflict but it waits for pendingMightRead of count attribute to clear out. However once it does, the conflict check is run again, but it detects a conflict because request 2 would have read count and incremented rts of count. Request 1 then restarts.
+
+policy file: policy-example4.xml 
+requests file: requests4.py
+initial database content file: database4.py
 
 
-(4) the coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker, waits for relevant pendingMightReads to be resolved, and then detects a conflict and re-starts r.
+Test Case (5):
+-------------
+This one is supposed to be similar to (2), except the client incorrectly predicts which object is written.
 
-(5) similar to (2), except the client incorrectly predicts which object is written.
+We have 2 requests, subj id 2 trying to access Bank A and subj id 1 trying to access Bank A. Request 1 gets delayed at the worker. Subj id 2 has an empty history while subj id 1 has Bank A in its history. Howvever, this time, the policy file is such that, for a first time access, we check if it is permitted, and if it is then we append the resource to history of the subject and for every subsequent access, we increment access count of the resource while having a condition that the count should not go above 4.
 
-(6) similar to (4), except the client incorrectly predicts which object is written.
+Since the client is unable to decide which coordinator to send the request to at first(the request might be for a first time access or an nth time access, it does not know!), be default it sends the first request to the subject coordinator, which is actually the write coordinator for request 1 since it is a first time access. pen
 
-(7) a read request is delayed in order to prevent starvation of writes, and later released and processed.  note: you can make this a separate testcase, or make this occur in a testcase also used for (1)-(6) above.
+policy file: policy-example5.xml 
+requests file: requests5.py
+initial database content file: database5.py
 
+
+Test Case (6):
+-------------
+This one is similar to (4), except the client incorrectly predicts which object is written.
+
+We have 2 requests, both from subj id 1, trying to gain access to the same resource, BankA. The first request is delayed at the worker for 2 secs while the second one is delayed for 5. subj id 1 has an empty history prior to these requests. As per our policy file we have 2 permitted actions, read and write. A first time read(empty history) leads to history updation for subject while a subsequent read leads to increment in rcount attribute of resource. A write will lead to an increment of wcount attribute of the resource, only if its a first time access-i.e., a second write is not acceptable.
+
+Request 1 is a read request while request 2 is a write request. Request 1 is incorrectly sent to subject coordinator at first. When request 1 returns from the worker, it does not see a conflict because rts of history attribute has not been read by any request yet. However it will wait for pendingMightRead list of history to empty out because request 2 is in it. However, in the second conflict test, it will turn out that request 2 has indeed read history value and changed its rts, which is why request 1 will restart.
+
+We realize that the second write should not be permitted from the client side but since client is not waiting for response of first request before it proceeds with the second, we are unable to deny access to request 2.
+
+policy file: policy-example6.xml 
+requests file: requests6.py
+initial database content file: database6.py
 ---------------------------------------------------------------------------------------------------------------------------
-2) Stress tests
----------------
+
+2) Stress tests/Test Case (7):
+-----------------------------
+We ran 100 consecutive read requests and 100 consecutive write requests.
+The files used were as follows:
+
+policy file: policy-example7.xml 
+requests file: requests7.py
+initial database content file: database7.py
+
+We merged the test with 100 read requests with test case 7. In this scenario the first request is a write request followed by 100 read requests. The write request is restarted and it can be seen in the log file, that when it comes back for a second round of evaluation, the read requests that arrive after it, are made to wait for its completion before being allowed to proceed.
+
+
 ---------------------------------------------------------------------------------------------------------------------------
 3) Performance tests
 --------------------
+We ran a chain of 1000+ requests and measured the time taken by each request starting from the time it was sent by the client to the time it returns to the client. These timings were stored in a list which was then passed to numpy.mean and numpy.std functions to obtain the average timing and standard deviation. We ran it twice to obtain the following results:
+Number of Requests:1000, mean: 0.0135486590862 secs, standard deviation: 0.00258786363081 secs
+Number of Requests:1000, mean: 0.0135904724598 secs, standard deviation: 0.00283079635809 secs
+
+For the older system, we obtain a mean timing of 0.01589 secs per request.
+
+
+
+
