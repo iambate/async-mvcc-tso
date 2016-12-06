@@ -1,5 +1,60 @@
 1) Standard tests as mentioned in project.txt
 ---------------------------------------------
+
+Test Case (1):
+-------------
+The first request is from subject id 1, trying to read BankA(resource id:257)'s document while having BankA already in its history and there's a second request from subject id 2 trying to access the same resource but for the first time.
+The policy file is such that for accessing a resource the first time, we check the subject's history but with every subsequent acess we increment a count attribute fo the resource. 
+We make the 1st request wait in worker to simulate a delay and show how the system behaves in the folowing scenario:  
+
+The coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker and immediately commits r, because the pendingMightRead sets for relevant attributes are empty; to make this scenario non-trivial, some of those pendingMightRead sets should be non-empty at some time between when coord(oW) forwards r to the worker and when coord(oW) receives the result of r from the worker, and they should contain some other read-write requests as well as some read-only requests.
+
+As per our design, request 2 is added to pendingMightRead for count attribute of resource BankA because it is a write request and is added to pendingMightRead of all attributes it might possibly read or update(hence assumed to read as well prior to updation).  Request 2 is able to complete evaluation and leave the system before request 1 returns from the worker and request 1, seeing an empty pendingMightRead list for attribute count, proceeds to completion.
+
+policy file: policy-example1.xml 
+requests file: requests1.py
+initial database content file: database1.py
+
+
+Test Case (2):
+-------------
+This test case simulates the following scenario:
+similar to (1), but the commit of r is delayed, because some of the pendingMightRead sets for relevant attributes are non-empty when coord(oW) receives the result of r from the worker.
+
+The requests, policies and initial database content file used for this are the same as above except that the first request is not delayed at the worker. Instead the second request is delayed so that request 1 has to wait for pendingMightRead list of attribute count to clear out before it proceeds to completion.
+
+policy file: policy-example2.xml 
+requests file: requests2.py
+initial database content file: database2.py
+
+
+Test Case (3):
+-------------
+In the policy file we use for this test case, we update count attribute of a bank resource every time a new client accesses it and do nothing if it turns out that the subject has already had access to the same resource.
+
+We have 2 requests - from subj id 1 trying to gain access to Bank B for the first time, and second from subj id 3 trying to gain access to the same Bank B but it already has BankB in its history.
+
+Request 1 is delayed at the worker. In the meantime, Request 2 reads count, (since it reads all attributes pertaining to  all rules until it reaches the one it matches to), and increments rts of count.Request 1 encounters a conflict as soon as it returns from the worker and restarts.
+
+It simulates the following: the coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker, immediately detects a conflict, and re-starts r.
+
+policy file: policy-example3.xml 
+requests file: requests3.py
+initial database content file: database3.py
+
+
+Test Case (4):
+-------------
+
+
+(4) the coordinator coord(oW) for the object oW written by a read-write request r receives the result of r from the worker, waits for relevant pendingMightReads to be resolved, and then detects a conflict and re-starts r.
+
+(5) similar to (2), except the client incorrectly predicts which object is written.
+
+(6) similar to (4), except the client incorrectly predicts which object is written.
+
+(7) a read request is delayed in order to prevent starvation of writes, and later released and processed.  note: you can make this a separate testcase, or make this occur in a testcase also used for (1)-(6) above.
+
 ---------------------------------------------------------------------------------------------------------------------------
 2) Stress tests
 ---------------
